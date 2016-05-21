@@ -8,4 +8,4 @@ Adds paper doll ui to the Isleward inventory.
 3. Open your inventory
 
 ## Screenshot
-![Inventory](https://raw.githubusercontent.com/silencesys/Pixel-doll-ui/master/screenshot.jpg)
+![Inventory](https://raw.githubusercontent.com/silencesys/Pixel-doll-ui/master/screenshot.gif)
