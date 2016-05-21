@@ -19,17 +19,17 @@ addons.register({
         this.buildPixelDoll(equipped);
         // Timeout because player data are available later
         setTimeout(function(){
-            $('<div class="character-box"></div>').appendTo('.pixelDoll');
-            $('<div class="heading">'+window.player.name+'</div>').appendTo('.pixelDoll');
-            $('<div class="level pd-text">level '+window.player.level+'</div>').appendTo('.pixelDoll');
-            $('<div class="class pd-text">class '+window.player.class+'</div>').appendTo('.pixelDoll');
+            $('<div class="pixelDoll-character-box"></div>').appendTo('.pixelDoll');
+            $('<div class="pixelDoll-heading">'+window.player.name+'</div>').appendTo('.pixelDoll');
+            $('<div class="pixelDoll-level pixelDoll-text">level '+window.player.level+'</div>').appendTo('.pixelDoll');
+            $('<div class="pixelDoll-class pixelDoll-text">class '+window.player.class+'</div>').appendTo('.pixelDoll');
 
             spriteY = ~~(window.player.cell / 8);
             spriteX = window.player.cell - (spriteY * 8);
             spriteY = -(spriteY * 32);
             spriteX = -(spriteX * 32);
 
-            var character = $('<div class="character"></div>').appendTo('.character-box');
+            var character = $('<div class="pixelDoll-character"></div>').appendTo('.pixelDoll-character-box');
             character.css('background', 'url("../../../images/charas.png") ' + spriteX + 'px ' + spriteY + 'px');
         }, 0.1);
     },
@@ -38,24 +38,24 @@ addons.register({
         // prevent duplication
         if( ! this.buttonPixelDoll && ! this.buttonStats)
         {
-            this.buttonPixelDoll = $('<div class="charsButton active"></div>').appendTo(this.uiInventory);
-            this.buttonStats     = $('<div class="statsButton"></div>').appendTo(this.uiInventory);
+            this.buttonPixelDoll = $('<div class="pixelDoll-charsButton pixelDoll-active"></div>').appendTo(this.uiInventory);
+            this.buttonStats     = $('<div class="pixelDoll-statsButton"></div>').appendTo(this.uiInventory);
         }
 
         this.buttonStats.on('click', function() {
             $('.pixelDoll').hide();
-            $(this).addClass('active');
-            if($('.charsButton').hasClass('active'))
+            $(this).addClass('pixelDoll-active');
+            if($('.pixelDoll-charsButton').hasClass('pixelDoll-active'))
             {
-                $('.charsButton').removeClass('active');
+                $('.pixelDoll-charsButton').removeClass('pixelDoll-active');
             }
         })
         this.buttonPixelDoll.on('click', function() {
             $('.pixelDoll').show();
-            $(this).addClass('active');
-            if($('.statsButton').hasClass('active'))
+            $(this).addClass('pixelDoll-active');
+            if($('.pixelDoll-statsButton').hasClass('pixelDoll-active'))
             {
-                $('.statsButton').removeClass('active');
+                $('.pixelDoll-statsButton').removeClass('pixelDoll-active');
             }
         })
     },
@@ -80,7 +80,7 @@ addons.register({
             var imgX = item.sprite[0] * 64;
             var imgY = item.sprite[1] * 64;
 
-            var eqItem = $('<div class="item" data-quality="'+item.quality+'" data-slot="'+item.slot+'"><div class="icon" style="background: url(\'../../../images/items.png\') -'+imgX+'px -'+imgY+'px;"></div></div>').appendTo(this.uiPixelDoll);
+            var eqItem = $('<div class="pixelDoll-item" data-quality="'+item.quality+'" data-slot="'+item.slot+'"><div class="pixelDoll-icon" style="background: url(\'../../../images/items.png\') -'+imgX+'px -'+imgY+'px;"></div></div>').appendTo(this.uiPixelDoll);
             eqItem.on('mouseenter', this.showEqTooltip.bind(this, item, eqItem))
                   .on('mouseleave', this.hideEqTooltip.bind());
         }

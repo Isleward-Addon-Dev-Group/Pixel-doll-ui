@@ -9,8 +9,8 @@
  * Tabs
  */
 
-.charsButton,
-.statsButton
+.pixelDoll-charsButton,
+.pixelDoll-statsButton
 {
     width: 60px;
     height: 64px;
@@ -25,23 +25,23 @@
     box-sizing: border-box;
     cursor: pointer;
 }
-.charsButton:hover,
-.statsButton:hover
+.pixelDoll-charsButton:hover,
+.pixelDoll-statsButton:hover
 {
     background-color: #4a4353;
 }
-.charsButton
+.pixelDoll-charsButton
 {
     background-image: url(https://isleward-test.herokuapp.com/images/items.png);
     background-position: -4px -68px;
 }
-.statsButton
+.pixelDoll-statsButton
 {
     background-image: url(https://isleward-test.herokuapp.com/images/items.png);
     background-position: -516px -4px;
     top: 70px;
 }
-.active
+.pixelDoll-active
 {
     border-left: 4px solid #505360;
     border-top: 4px solid #505360;
@@ -49,14 +49,14 @@
     background-color: #3c3f4c;
     width: 64px;
 }
-.active:hover
+.pixelDoll-active:hover
 {
     background-color: #3c3f4c;
 }
 /**
  * PixelDoll UI
  */
-.uiInventory .pixelDoll .item {
+.uiInventory .pixelDoll .pixelDoll-item {
     width: 64px;
     height: 64px;
     float: left;
@@ -64,17 +64,17 @@
     cursor: pointer;
     box-sizing: border-box;
 }
-.uiInventory .pixelDoll .item .icon {
+.uiInventory .pixelDoll .pixelDoll-item .pixelDoll-icon {
     width: 100%;
     height: 100%;
     position: absolute;
     left: -4px;
     top: -4px;
 }
-.uiInventory .pixelDoll .item:hover {
+.uiInventory .pixelDoll .pixelDoll-item:hover {
     background-color: rgba(238,238,238,0.1);
 }
-.uiInventory .pixelDoll .item {
+.uiInventory .pixelDoll .pixelDoll-item {
     border: 4px solid #505360;
 }
 .uiInventory>.pixelDoll {
@@ -86,18 +86,18 @@
     background-color: #3c3f4c;
     text-align: center;
 }
-.uiInventory .pixelDoll .heading
+.uiInventory .pixelDoll .pixelDoll-heading
 {
     font-size: 1.3em;
     color: #fff;
     margin-bottom: 6px;
 }
-.uiInventory .pixelDoll .pd-text
+.uiInventory .pixelDoll .pixelDoll-text
 {
     color: #fff;
     margin-bottom: 3px;
 }
-.uiInventory .pixelDoll .character-box
+.uiInventory .pixelDoll .pixelDoll-character-box
 {
     position: absolute;
     width: 112px;
@@ -107,7 +107,7 @@
     margin: -66px -56px;
     overflow: hidden;
 }
-.uiInventory .pixelDoll .character
+.uiInventory .pixelDoll .pixelDoll-character
 {
     width: 32px;
     height: 32px;
@@ -117,52 +117,52 @@
 /* ---------------------------------------
     SLOT POSITIONS
    -----------------------------------  */
-.uiInventory .pixelDoll  .item[data-slot='head']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='head']
 {
 top: 0;
 left: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='neck']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='neck']
 {
 top: 104px;
 left: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='chest']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='chest']
 {
 top: 208px;
 left: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='hands']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='hands']
 {
 top: 312px;
 left: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='twoHanded']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='twoHanded']
 {
 top: 416px;
 left: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='waist']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='waist']
 {
 top: 0;
 right: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='legs']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='legs']
 {
 top: 104px;
 right: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='feet']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='feet']
 {
 top: 208px;
 right: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='finger']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='finger']
 {
 top: 312px;
 right: 0;
 }
-.uiInventory .pixelDoll  .item[data-slot='trinket']
+.uiInventory .pixelDoll  .pixelDoll-item[data-slot='trinket']
 {
 top: 416px;
 right: 0;
@@ -170,15 +170,31 @@ right: 0;
 /* ---------------------------------------
     Quality colours
    -----------------------------------  */
-.uiInventory .pixelDoll  .item[data-quality='1']
+.uiInventory .pixelDoll  .pixelDoll-item[data-quality='0']
+{
+    background-color: RGBA(54,56,69,0.3) !important;
+}
+.uiInventory .pixelDoll  .pixelDoll-item[data-quality='1']
 {
     background-color: RGBA(10,113,86,0.1) !important;
 }
-.uiInventory .pixelDoll  .item[data-quality='2']
+.uiInventory .pixelDoll  .pixelDoll-item[data-quality='2']
 {
     background-color: RGBA(255,255,0,0.1) !important;
 }
-.uiInventory .pixelDoll  .item[data-quality='3']
+.uiInventory .pixelDoll  .pixelDoll-item[data-quality='3']
 {
     background-color: RGBA(192,0,207,0.1) !important;
+}
+.uiInventory .pixelDoll  .pixelDoll-item[data-quality='1']
+{
+    border-color: RGBA(27,126,196,0.35) !important;
+}
+.uiInventory .pixelDoll  .pixelDoll-item[data-quality='2']
+{
+    border-color: RGBA(231,203,13,0.35) !important;
+}
+.uiInventory .pixelDoll  .pixelDoll-item[data-quality='3']
+{
+    border-color: RGBA(140,54,161,0.35) !important;
 }
