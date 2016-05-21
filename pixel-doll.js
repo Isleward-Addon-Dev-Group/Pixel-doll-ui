@@ -6,8 +6,12 @@ addons.register({
     onItemsLoad: function(items)
     {
         this.uiInventory = $('.uiInventory');
-        this.uiPixelDoll = $('<div class="pixelDoll"></div>').appendTo(this.uiInventory);
-        $('<div class="character-box"></div>').appendTo(this.uiPixelDoll);
+        // prevent duplication
+        if( ! this.uiPixelDoll)
+        {
+            this.uiPixelDoll = $('<div class="pixelDoll"></div>').appendTo(this.uiInventory);
+        }
+        $('.pixelDoll').empty();
         this.addTabs();
         // load items and filter only equipped
         var equipped = this.loadEquippedItems(items);
@@ -15,6 +19,7 @@ addons.register({
         this.buildPixelDoll(equipped);
         // Timeout because player data are available later
         setTimeout(function(){
+            $('<div class="character-box"></div>').appendTo('.pixelDoll');
             $('<div class="heading">'+window.player.name+'</div>').appendTo('.pixelDoll');
             $('<div class="level pd-text">level '+window.player.level+'</div>').appendTo('.pixelDoll');
             $('<div class="class pd-text">class '+window.player.class+'</div>').appendTo('.pixelDoll');
@@ -30,23 +35,27 @@ addons.register({
     },
     addTabs: function()
     {
-        var buttonPixelDoll = $('<div class="charsButton active"></div>').appendTo(this.uiInventory);
-        var buttonStats     = $('<div class="statsButton"></div>').appendTo(this.uiInventory);
+        // prevent duplication
+        if( ! this.buttonPixelDoll && ! this.buttonStats)
+        {
+            this.buttonPixelDoll = $('<div class="charsButton active"></div>').appendTo(this.uiInventory);
+            this.buttonStats     = $('<div class="statsButton"></div>').appendTo(this.uiInventory);
+        }
 
-        buttonStats.on('click', function() {
+        this.buttonStats.on('click', function() {
             $('.pixelDoll').hide();
             $(this).addClass('active');
-            if(buttonPixelDoll.hasClass('active'))
+            if($('.charsButton').hasClass('active'))
             {
-                buttonPixelDoll.removeClass('active');
+                $('.charsButton').removeClass('active');
             }
         })
-        buttonPixelDoll.on('click', function() {
+        this.buttonPixelDoll.on('click', function() {
             $('.pixelDoll').show();
             $(this).addClass('active');
-            if(buttonStats.hasClass('active'))
+            if($('.statsButton').hasClass('active'))
             {
-                buttonStats.removeClass('active');
+                $('.statsButton').removeClass('active');
             }
         })
     },
