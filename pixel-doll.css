@@ -1,0 +1,184 @@
+
+/**
+ * Change to default game values
+ */
+.uiInventory .grid .item.eq{display: none !important;}
+.uiInventory>.stats{width: 300px !important;}
+.tooltip {z-index: 900;}
+/**
+ * Tabs
+ */
+
+.charsButton,
+.statsButton
+{
+    width: 60px;
+    height: 64px;
+    top: -4px;
+    left: -64px;
+    background-color: #373041;
+    position: absolute;
+    display: block;
+    border-left: 4px solid #3c3f4c;
+    border-top: 4px solid #3c3f4c;
+    border-bottom: 4px solid #3c3f4c;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.charsButton:hover,
+.statsButton:hover
+{
+    background-color: #4a4353;
+}
+.charsButton
+{
+    background-image: url(https://isleward-test.herokuapp.com/images/items.png);
+    background-position: -4px -68px;
+}
+.statsButton
+{
+    background-image: url(https://isleward-test.herokuapp.com/images/items.png);
+    background-position: -516px -4px;
+    top: 70px;
+}
+.active
+{
+    border-left: 4px solid #505360;
+    border-top: 4px solid #505360;
+    border-bottom: 4px solid #505360;
+    background-color: #3c3f4c;
+    width: 64px;
+}
+.active:hover
+{
+    background-color: #3c3f4c;
+}
+/**
+ * PixelDoll UI
+ */
+.uiInventory .pixelDoll .item {
+    width: 64px;
+    height: 64px;
+    float: left;
+    position: absolute;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.uiInventory .pixelDoll .item .icon {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: -4px;
+    top: -4px;
+}
+.uiInventory .pixelDoll .item:hover {
+    background-color: rgba(238,238,238,0.1);
+}
+.uiInventory .pixelDoll .item {
+    border: 4px solid #505360;
+}
+.uiInventory>.pixelDoll {
+    position: absolute;
+    width: 300px;
+    height: 480px;
+    margin-right: 32px;
+    position: absolute;
+    background-color: #3c3f4c;
+    text-align: center;
+}
+.uiInventory .pixelDoll .heading
+{
+    font-size: 1.3em;
+    color: #fff;
+    margin-bottom: 6px;
+}
+.uiInventory .pixelDoll .pd-text
+{
+    color: #fff;
+    margin-bottom: 3px;
+}
+.uiInventory .pixelDoll .character-box
+{
+    position: absolute;
+    width: 112px;
+    height: 112px;
+    left: 50%;
+    top: 50%;
+    margin: -66px -56px;
+    overflow: hidden;
+}
+.uiInventory .pixelDoll .character
+{
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;;
+    zoom: 3.5;
+}
+/* ---------------------------------------
+    SLOT POSITIONS
+   -----------------------------------  */
+.uiInventory .pixelDoll  .item[data-slot='head']
+{
+top: 0;
+left: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='neck']
+{
+top: 104px;
+left: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='chest']
+{
+top: 208px;
+left: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='hands']
+{
+top: 312px;
+left: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='twoHanded']
+{
+top: 416px;
+left: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='waist']
+{
+top: 0;
+right: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='legs']
+{
+top: 104px;
+right: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='feet']
+{
+top: 208px;
+right: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='finger']
+{
+top: 312px;
+right: 0;
+}
+.uiInventory .pixelDoll  .item[data-slot='trinket']
+{
+top: 416px;
+right: 0;
+}
+/* ---------------------------------------
+    Quality colours
+   -----------------------------------  */
+.uiInventory .pixelDoll  .item[data-quality='1']
+{
+    background-color: RGBA(10,113,86,0.1) !important;
+}
+.uiInventory .pixelDoll  .item[data-quality='2']
+{
+    background-color: RGBA(255,255,0,0.1) !important;
+}
+.uiInventory .pixelDoll  .item[data-quality='3']
+{
+    background-color: RGBA(192,0,207,0.1) !important;
+}
