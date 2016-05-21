@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  Add paper-doll ui to inventory
 // @author       Silence.sys
-// @match        https://isleward-test.herokuapp.com/
+// @match        isleward-test.herokuapp.com/*
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @resource     pixelDoll https://cdn.rawgit.com/silencesys/Pixel-doll-ui/master/pixel-doll.css?v=1.6
