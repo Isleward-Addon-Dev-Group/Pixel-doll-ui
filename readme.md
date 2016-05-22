@@ -1,7 +1,7 @@
 # Isleward Pixel Doll
 Adds paper doll ui to the Isleward inventory.
 
-Changelog is available (here)[changelog.md]
+Changelog is available (here)[https://github.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/blob/master/changelog.md]
 
 ## Usage
 1. Install the addon
