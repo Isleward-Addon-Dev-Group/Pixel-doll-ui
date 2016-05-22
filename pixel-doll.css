@@ -177,24 +177,20 @@ right: 0;
 .uiInventory .pixelDoll  .pixelDoll-item[data-quality='1']
 {
     background-color: RGBA(10,113,86,0.1) !important;
-}
-.uiInventory .pixelDoll  .pixelDoll-item[data-quality='2']
-{
-    background-color: RGBA(255,255,0,0.1) !important;
-}
-.uiInventory .pixelDoll  .pixelDoll-item[data-quality='3']
-{
-    background-color: RGBA(192,0,207,0.1) !important;
-}
-.uiInventory .pixelDoll  .pixelDoll-item[data-quality='1']
-{
     border-color: RGBA(27,126,196,0.35) !important;
 }
 .uiInventory .pixelDoll  .pixelDoll-item[data-quality='2']
 {
-    border-color: RGBA(231,203,13,0.35) !important;
+    background-color: RGBA(255,255,0,0.1) !important;
+    border-color: RGBA(231,203,13,0.30) !important;
 }
 .uiInventory .pixelDoll  .pixelDoll-item[data-quality='3']
 {
+    background-color: RGBA(192,0,207,0.1) !important;
     border-color: RGBA(140,54,161,0.35) !important;
+}
+.uiInventory .pixelDoll  .pixelDoll-item[data-quality='4']
+{
+    background-color: RGBA(248,175,56,0.1) !important;
+    border-color: RGBA(203,151,66,0.35) !important;
 }

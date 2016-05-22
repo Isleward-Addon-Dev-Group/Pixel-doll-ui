@@ -72,6 +72,17 @@ addons.register({
     },
     buildPixelDoll: function(items)
     {
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="head"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="neck"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="chest"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="hands"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="twoHanded"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="waist"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="legs"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="feet"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="finger"></div>').appendTo(this.uiPixelDoll);
+        $('<div class="pixelDoll-item" data-quality="0" data-slot="trinket"></div>').appendTo(this.uiPixelDoll);
+
         var itemsLength = items.length;
         for(var i = 0; i < itemsLength; i++)
         {
@@ -80,8 +91,10 @@ addons.register({
             var imgX = item.sprite[0] * 64;
             var imgY = item.sprite[1] * 64;
 
-            var eqItem = $('<div class="pixelDoll-item" data-quality="'+item.quality+'" data-slot="'+item.slot+'"><div class="pixelDoll-icon" style="background: url(\'../../../images/items.png\') -'+imgX+'px -'+imgY+'px;"></div></div>').appendTo(this.uiPixelDoll);
-            eqItem.on('mouseenter', this.showEqTooltip.bind(this, item, eqItem))
+            var eqItem = $('.pixelDoll-item[data-slot="'+item.slot+'"]');
+            eqItem.attr('data-quality', item.quality)
+                  .html('<div class="pixelDoll-icon" style="background: url(\'../../../images/items.png\') -'+imgX+'px -'+imgY+'px;"></div></div>')
+                  .on('mouseenter', this.showEqTooltip.bind(this, item, eqItem))
                   .on('mouseleave', this.hideEqTooltip.bind());
         }
     },
