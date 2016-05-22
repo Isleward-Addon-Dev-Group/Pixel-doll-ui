@@ -10,7 +10,8 @@
  */
 
 .pixelDoll-charsButton,
-.pixelDoll-statsButton
+.pixelDoll-statsButton,
+.pixelDoll-filtersButton
 {
     width: 60px;
     height: 64px;
@@ -26,7 +27,8 @@
     cursor: pointer;
 }
 .pixelDoll-charsButton:hover,
-.pixelDoll-statsButton:hover
+.pixelDoll-statsButton:hover,
+.pixelDoll-filtersButton:hover
 {
     background-color: #4a4353;
 }
@@ -40,6 +42,12 @@
     background-image: url(https://isleward-test.herokuapp.com/images/items.png);
     background-position: -516px -4px;
     top: 70px;
+}
+.pixelDoll-filtersButton
+{
+    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=1.3);
+    background-position: -5px -4px;
+    top: 144px;
 }
 .pixelDoll-active
 {
@@ -56,6 +64,15 @@
 /**
  * PixelDoll UI
  */
+.uiInventory>.pixelDoll {
+    position: absolute;
+    width: 300px;
+    height: 480px;
+    margin-right: 32px;
+    position: absolute;
+    background-color: #3c3f4c;
+    text-align: center;
+}
 .uiInventory .pixelDoll .pixelDoll-item {
     width: 64px;
     height: 64px;
@@ -77,27 +94,18 @@
 .uiInventory .pixelDoll .pixelDoll-item {
     border: 4px solid #505360;
 }
-.uiInventory>.pixelDoll {
-    position: absolute;
-    width: 300px;
-    height: 480px;
-    margin-right: 32px;
-    position: absolute;
-    background-color: #3c3f4c;
-    text-align: center;
-}
-.uiInventory .pixelDoll .pixelDoll-heading
+.uiInventory .pixelDoll-heading
 {
     font-size: 1.3em;
     color: #fff;
     margin-bottom: 6px;
 }
-.uiInventory .pixelDoll .pixelDoll-text
+.uiInventory .pixelDoll-text
 {
     color: #fff;
     margin-bottom: 3px;
 }
-.uiInventory .pixelDoll .pixelDoll-character-box
+.uiInventory .pixelDoll-character-box
 {
     position: absolute;
     width: 112px;
@@ -113,6 +121,44 @@
     height: 32px;
     image-rendering: pixelated;;
     zoom: 3.5;
+}
+/**
+ * PixelDoll Filters
+ */
+.uiInventory>.pixelDoll-filters {
+    position: absolute;
+    width: 300px;
+    height: 480px;
+    margin-right: 32px;
+    position: absolute;
+    background-color: #3c3f4c;
+    text-align: center;
+}
+.uiInventory>.pixelDoll-filters .pixelDoll-heading
+{
+    margin-bottom: 24px;
+}
+.pixelDoll-statButton
+{
+    background-color: #505360;
+    width: 100%;
+    color: #EEE;
+    margin-top: 5px;
+    height: 35px;
+    line-height: 27px;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 4px solid #505360;
+}
+.pixelDoll-statButton[data-state="on"]
+{
+    background: #3c3f4c;
+    border-color: #505360;
+}
+.pixelDoll-statButton:hover
+{
+    background: #5e6271;
+    border-color: #5e6271;
 }
 /* ---------------------------------------
     SLOT POSITIONS
