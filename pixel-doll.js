@@ -3,6 +3,37 @@ addons.register({
     {
         this.itemFilter = [];
         events.on('onGetItems', this.onItemsLoad.bind(this));
+
+        // binds to default inventory actions
+        events.on('onShowInventory', this.inventoryClick.bind(this));
+        events.on('onKeyDown', this.inventoryKeyDown.bind(this));
+    },
+    inventoryClick: function()
+    {
+        this.buildFilteredInventory();
+        this.addQualityBorders();
+    },
+    inventoryKeyDown: function(key)
+    {
+        if (key == 'i')
+        {
+            this.buildFilteredInventory();
+            this.addQualityBorders();
+        }
+    },
+    addQualityBorders: function()
+    {
+        setTimeout(function(){
+            var item = $('.item');
+            var itemLength = item.length;
+
+            for(var i = 0; i < itemLength; i++ )
+            {
+                var bgPosition = item.eq(i).children('.icon').css('background-position').split(' ');
+                item.eq(i).attr('data-quality', item.eq(i).data('item').quality);
+                item.eq(i).children('.icon').css('background-position', (parseInt(bgPosition[0],10)-4) + 'px ' + (parseInt(bgPosition[1],10)-4) + 'px');
+            }
+        },1)
     },
     onItemsLoad: function(items)
     {
@@ -18,8 +49,8 @@ addons.register({
         var equipped = this.loadEquippedItems(items);
         // build PixelDoll
         this.buildPixelDoll(equipped);
-        // filter inventory items
         this.buildFilteredInventory();
+        this.addQualityBorders();
         // Timeout because player data are available later
         setTimeout(function(){
             $('<div class="pixelDoll-character-box"></div>').appendTo('.pixelDoll');
@@ -134,6 +165,7 @@ addons.register({
             // if is filter present
             else
             {
+                $('.item').hide();
                 // loop through filters
                 for(var a = 0; a < itemFilterLength; a++)
                 {
