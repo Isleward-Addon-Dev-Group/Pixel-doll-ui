@@ -7,6 +7,12 @@ addons.register({
         // binds to default inventory actions
         events.on('onShowInventory', this.inventoryClick.bind(this));
         events.on('onKeyDown', this.inventoryKeyDown.bind(this));
+        events.on('onDestroyItems', this.inventoryDestroyItem.bind(this));
+    },
+    inventoryDestroyItem: function()
+    {
+        this.buildFilteredInventory();
+        this.addQualityBorders();
     },
     inventoryClick: function()
     {
@@ -33,7 +39,7 @@ addons.register({
                 item.eq(i).attr('data-quality', item.eq(i).data('item').quality);
                 item.eq(i).children('.icon').css('background-position', (parseInt(bgPosition[0],10)-4) + 'px ' + (parseInt(bgPosition[1],10)-4) + 'px');
             }
-        },1)
+        },0.1)
     },
     onItemsLoad: function(items)
     {
@@ -156,7 +162,7 @@ addons.register({
             {
                 for(var c = 0; c < itemLength; c++)
                 {
-                    if($('.item').eq(c).data('item').eq != true)
+                    if(($('.item').eq(c).length > 0) && ('eq' in $('.item').eq(c).data('item')))
                     {
                          $('.item').eq(c).show();
                     }
