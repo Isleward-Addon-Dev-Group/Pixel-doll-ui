@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Isleward - Pixeldoll UI
 // @namespace    Isleward.Addon
-// @version      1.6
+// @version      1.8
 // @description  Add paper-doll ui to inventory
 // @author       Silence.sys
 // @match        isleward-test.herokuapp.com/*
