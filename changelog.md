@@ -1,4 +1,8 @@
 # Isleward Pixel Doll changelog
+### 1.8.2
+* fixed issue that prevent filters to be applied
+* fixed issue that filters sometimes failed when item was dropped or equipped
+
 ### 1.8.1
 ___
 * fixed inventory reset when player delete or drop items

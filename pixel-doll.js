@@ -154,7 +154,8 @@ addons.register({
         var itemFilter = this.itemFilter;
         var itemFilterLength = itemFilter.length;
         var item = $('.item');
-        var itemLength = item.length;
+        // because item inventory failed on full length
+        var itemLength = item.length - 1;
         // TimeOut because inventory is rebuilded every onGetItems event and it must wait until all items are present
         setTimeout(function(){
             // if filter is not present
@@ -162,7 +163,7 @@ addons.register({
             {
                 for(var c = 0; c < itemLength; c++)
                 {
-                    if(($('.item').eq(c).length > 0) && ('eq' in $('.item').eq(c).data('item')))
+                    if(($('.item').eq(c).length > 0) && ($('.item').eq(c).data('item').eq != true))
                     {
                          $('.item').eq(c).show();
                     }

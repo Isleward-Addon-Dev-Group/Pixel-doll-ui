@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Isleward - Pixeldoll UI
 // @namespace    Isleward.Addon
-// @version      1.8.1
+// @version      1.8.2
 // @description  Add paper-doll ui to inventory
 // @author       Silence.sys
 // @match        isleward-test.herokuapp.com/*
@@ -15,6 +15,6 @@
     GM_addStyle(css);
     var scriptElement = document.createElement( "script" );
     scriptElement.type = "text/javascript";
-    scriptElement.src = "https://cdn.rawgit.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/1.8.1/pixel-doll.js";
+    scriptElement.src = "https://cdn.rawgit.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/1.8.2/pixel-doll.js";
     document.body.appendChild( scriptElement );
 })();
