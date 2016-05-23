@@ -1,4 +1,8 @@
 # Isleward Pixel Doll changelog
+### 1.8.1
+___
+* fixed inventory reset when player delete or drop items
+
 ### 1.8
 ___
 
