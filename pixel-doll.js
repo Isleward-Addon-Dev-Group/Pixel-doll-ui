@@ -1,7 +1,9 @@
 addons.register({
     init: function(events)
     {
-        this.itemFilter = [];
+        this.includeFilter = [];
+        this.excludeFilter = [];
+        this.levelFilter   = 0;
         events.on('onGetItems', this.onItemsLoad.bind(this));
 
         // binds to default inventory actions
@@ -26,20 +28,6 @@ addons.register({
             this.buildFilteredInventory();
             this.addQualityBorders();
         }
-    },
-    addQualityBorders: function()
-    {
-        setTimeout(function(){
-            var item = $('.item');
-            var itemLength = item.length;
-
-            for(var i = 0; i < itemLength; i++ )
-            {
-                var bgPosition = item.eq(i).children('.icon').css('background-position').split(' ');
-                item.eq(i).attr('data-quality', item.eq(i).data('item').quality);
-                item.eq(i).children('.icon').css('background-position', (parseInt(bgPosition[0],10)-4) + 'px ' + (parseInt(bgPosition[1],10)-4) + 'px');
-            }
-        },0.1)
     },
     onItemsLoad: function(items)
     {
@@ -72,6 +60,20 @@ addons.register({
             var character = $('<div class="pixelDoll-character"></div>').appendTo('.pixelDoll-character-box');
             character.css('background', 'url("../../../images/charas.png") ' + spriteX + 'px ' + spriteY + 'px');
         }, 0.1);
+    },
+    addQualityBorders: function()
+    {
+        setTimeout(function(){
+            var item = $('.item');
+            var itemLength = item.length;
+
+            for(var i = 0; i < itemLength; i++ )
+            {
+                var bgPosition = item.eq(i).children('.icon').css('background-position').split(' ');
+                item.eq(i).attr('data-quality', item.eq(i).data('item').quality);
+                item.eq(i).children('.icon').css('background-position', (parseInt(bgPosition[0],10)-4) + 'px ' + (parseInt(bgPosition[1],10)-4) + 'px');
+            }
+        },0.1)
     },
     addTabs: function()
     {
@@ -148,52 +150,87 @@ addons.register({
                   .on('mouseleave', this.hideEqTooltip.bind());
         }
     },
-    buildFilteredInventory: function()
+    buildFilteredInventory: function(data)
     {
-        // get all items in inventory
-        var itemFilter = this.itemFilter;
-        var itemFilterLength = itemFilter.length;
-        var item = $('.item');
-        // because item inventory failed on full length
-        var itemLength = item.length - 1;
-        // TimeOut because inventory is rebuilded every onGetItems event and it must wait until all items are present
+        var exl   = this.excludeFilter;
+        var incl  = this.includeFilter;
+        var level = this.levelFilter;
+        if(data)
+        {
+            exl   = data.exclude;
+            incl  = data.include;
+            level = data.level;
+        }
         setTimeout(function(){
-            // if filter is not present
-            if(itemFilterLength == 0)
+            var item  = $('.item');
+            var itemL = item.length;
+            for(var i = 0; i < itemL; i++)
             {
-                for(var c = 0; c < itemLength; c++)
+                var rel = 0;
+                var iStats  = item.eq(i).data('item').stats;
+                var iLevel  = item.eq(i).data('item').level;
+                var iStatsL = Object.keys(iStats).length;
+                for(var s = 0; s < iStatsL; s++)
                 {
-                    if(($('.item').eq(c).length > 0) && ($('.item').eq(c).data('item').eq != true))
+                    var iStatsK = Object.keys(iStats)[s];
+                    if($.inArray(iStatsK, incl) >= 0)
                     {
-                         $('.item').eq(c).show();
+                        rel = rel + iStats[iStatsK];
+                        // if level is set
+                        if(iLevel === level)
+                        {
+                            rel = rel * 10;
+                        }
+                    }
+                    if($.inArray(iStatsK, exl) >= 0)
+                    {
+                        rel--;
+                    }
+                    // level filtering
+                    if(exl.length == 0 && incl.length == 0 && level > 0)
+                    {
+                        if(iLevel == level)
+                        {
+                            rel = iLevel;
+                        }
                     }
                 }
+                item.eq(i).attr({'data-id': item.eq(i).data('item').id, 'data-slot': item.eq(i).data('item').slot})
+                item.eq(i).attr('data-relevance', rel * -1);
+                if(item.eq(i).attr('data-relevance') > 0)
+                {
+                    item.eq(i).addClass('pixelDoll-noRelevant');
+                }
+                if(item.eq(i).attr('data-relevance') <= 0)
+                {
+                    item.eq(i).removeClass('pixelDoll-noRelevant');
+                }
             }
-            // if is filter present
+            if(exl.length > 0 || incl.length > 0 || level > 0)
+            {
+                item.sort(function(a, b)
+                {
+                    return +a.dataset.relevance - +b.dataset.relevance;
+                }).appendTo('.uiInventory>.grid');
+            }
             else
             {
-                $('.item').hide();
-                // loop through filters
-                for(var a = 0; a < itemFilterLength; a++)
-                {
-                    // loop through items
-                    for(var i = 0; i < itemLength; i++)
+                item.sort(function(a, b){
+                    if (a.dataset.slot > b.dataset.slot)
                     {
-                        var itemStats = $('.item').eq(i).data('item').stats;
-                        // if stat is presented on item hide it
-                        if(itemFilter[a] in itemStats)
-                        {
-                            $('.item').eq(i).hide();
-                        }
-                        // wow, I don't know what this doing :D
-                        else if($.inArray(itemFilter[a], itemFilter) <= 0)
-                        {
-                            $('.item').eq(i).show();
-                        }
+                        return -1;
                     }
-                }
+                    else if (a.dataset.slot < b.dataset.slot)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return b.dataset.id - a.dataset.id;
+                    }
+                }).appendTo('.uiInventory>.grid');
             }
-        },1);
+        }, 1)
     },
     buildFilterBox: function()
     {
@@ -220,7 +257,7 @@ addons.register({
             $('<div class="pixelDoll-heading">Filter</div>').appendTo(pdFilters);
             for(var i = 0; i < pdStatsLength; i++)
             {
-                $('<div class="pixelDoll-statButton" data-state="off" onclick="" data-stat="'+pdStats[i]+'">'+pdStats[i]+'</div>').appendTo(pdFilters);
+                $('<div class="pixelDoll-statButton" data-state="0" data-stat="'+pdStats[i]+'">'+pdStats[i]+'</div>').appendTo(pdFilters);
             }
         }
         else
@@ -228,30 +265,51 @@ addons.register({
             $('.pixelDoll-filters').show();
         }
         // .statButton action, it's here because passing event to another function fired error
-        $('.pixelDoll-filters .pixelDoll-statButton').unbind('click').click({itemFilter: this.itemFilter, inv: this.buildFilteredInventory}, function(event)
+        $('.pixelDoll-filters .pixelDoll-statButton').unbind('click').click({include: this.includeFilter, exclude: this.excludeFilter, level: this.levelFilter, inv: this.buildFilteredInventory}, function(event)
         {
-            var filter = event.data.itemFilter;
+            var includeFilter = event.data.include;
+            var excludeFitler = event.data.exclude;
+            var levelFilter   = event.data.level;
             var stat   = $(this).data('stat');
+            var state  = $(this).attr('data-state');
             // clear all selected filters
             if(stat == 'clear filters')
             {
-                $('.pixelDoll-statButton').attr('data-state', 'off');
-                filter.length = 0;
+                $('.pixelDoll-statButton').attr('data-state', '0');
+                includeFilter.length = 0;
+                excludeFitler.length = 0;
+                levelFilter          = 0;
             }
-            // turn off filter
-            else if($.inArray(stat, filter) != -1)
-            {
-                $(this).attr('data-state', 'off');
-                filter.splice( $.inArray(stat, filter), 1);
-            }
-            // turn on filter
             else
             {
-                $(this).attr('data-state', 'on');
-                filter.push(stat);
+                switch(state)
+                {
+                case '0':
+                    includeFilter.push(stat);
+                    $(this).attr('data-state', 1);
+                    break;
+                case '1':
+                    if($.inArray(stat, includeFilter) != -1)
+                    {
+                        includeFilter.splice( $.inArray(stat, includeFilter), 1);
+                    }
+                    excludeFitler.push(stat);
+                    $(this).attr('data-state', 2);
+                    break;
+                case '2':
+                    if($.inArray(stat, includeFilter) != -1)
+                    {
+                        includeFilter.splice( $.inArray(stat, includeFilter), 1);
+                    }
+                    if($.inArray(stat, excludeFitler) != -1)
+                    {
+                        excludeFitler.splice( $.inArray(stat, excludeFitler), 1);
+                    }
+                    $(this).attr('data-state', 0);
+                    break;
+                }
             }
-            // rebuild inventory
-            event.data.inv();
+            event.data.inv(event.data);
         });
     },
     hideEqTooltip: function()
