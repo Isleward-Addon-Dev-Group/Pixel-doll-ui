@@ -93,6 +93,7 @@ addons.register({
         this.buildPixelDoll(this.itemEquipped);
         this.buildFilteredInventory();
         this.addQualityBorders();
+        setTimeout(this.addCompareTooltips.bind(this), 1);
         // Timeout because player data are available later
         setTimeout(function(){
             $('<div class="pixelDoll-character-box"></div>').appendTo('.pixelDoll');
