@@ -5,7 +5,7 @@
 .uiInventory .grid .item.eq{display: none !important;}
 .uiInventory>.stats{width: 300px !important;}
 .tooltip {z-index: 900;}
-.uiInventory>.grid{width: 676px !important;}
+.uiInventory>.grid{width: 676px !important; height: 525px !important;}
 /**
  * Add quality to inventory
  */
@@ -158,6 +158,10 @@
     position: absolute;
     background-color: #3c3f4c;
     text-align: center;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
 }
 .uiInventory>.pixelDoll-filters .pixelDoll-heading
 {
@@ -175,6 +179,35 @@
     box-sizing: border-box;
     border: 4px solid #505360;
 }
+.pixelDoll-plus,
+.pixelDoll-minus
+{
+    background-color: #505360;
+    width: 35px;
+    color: #EEE;
+    margin-top: 5px;
+    height: 35px;
+    line-height: 27px;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 4px solid #505360;
+    display: inline-block;
+    vertical-align: top;
+}
+.pixelDoll-level-input
+{
+    width: 220px;
+    margin: 5px 5px 0;
+    height: 35px;
+    box-sizing: border-box;
+    background: #373041;
+    border: none;
+    text-align: center;
+    color: #fff;
+    font-size: 1.1em;
+    line-height: 35px;
+    vertical-align: top;
+}
 .pixelDoll-statButton[data-state="1"]
 {
     background: #6a6e84;
@@ -185,7 +218,9 @@
     background: #3c3f4c;
     border-color: #505360;
 }
-.pixelDoll-statButton:hover
+.pixelDoll-statButton:hover,
+.pixelDoll-plus:hover,
+.pixelDoll-minus:hover
 {
     background: #5e6271;
     border-color: #5e6271;

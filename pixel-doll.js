@@ -3,8 +3,8 @@ addons.register({
     {
         this.includeFilter = [];
         this.excludeFilter = [];
-        this.levelFilter   = 0;
         events.on('onGetItems', this.onItemsLoad.bind(this));
+        events.on('onGetStats', this.onGetStats.bind(this));
 
         // binds to default inventory actions
         events.on('onShowInventory', this.inventoryClick.bind(this));
@@ -60,6 +60,17 @@ addons.register({
             var character = $('<div class="pixelDoll-character"></div>').appendTo('.pixelDoll-character-box');
             character.css('background', 'url("../../../images/charas.png") ' + spriteX + 'px ' + spriteY + 'px');
         }, 0.1);
+    },
+    onGetStats: function(stats)
+    {
+        if($('.pixelDoll-level').html())
+        {
+            var currentLevel = parseInt($('.pixelDoll-level').html().slice(6));
+            if(currentLevel != stats.level)
+            {
+                $('.pixelDoll-level').html('level ' + stats.level);
+            }
+        }
     },
     addQualityBorders: function()
     {
@@ -154,7 +165,7 @@ addons.register({
     {
         var exl   = this.excludeFilter;
         var incl  = this.includeFilter;
-        var level = this.levelFilter;
+        var level = ($('.pixelDoll-level-input').val()) ? parseInt($('.pixelDoll-level-input').val()) : '0';
         if(data)
         {
             exl   = data.exclude;
@@ -177,7 +188,7 @@ addons.register({
                     {
                         rel = rel + iStats[iStatsK];
                         // if level is set
-                        if(iLevel === level)
+                        if(iLevel == level)
                         {
                             rel = rel * 10;
                         }
@@ -249,12 +260,14 @@ addons.register({
         // build filters if not exist
         if( ! this.uiPixelDollFilters)
         {
+
             var pdStats = ['manaMax','regenMana','hpMax','regenHp','str','int','dex','magicFind','addCritChance','armor', 'clear filters'];
             var pdStatsLength = pdStats.length;
 
             this.uiPixelDollFilters = $('<div class="pixelDoll-filters"></div>').appendTo('.uiInventory');
             var pdFilters = $('.pixelDoll-filters').empty();
             $('<div class="pixelDoll-heading">Filter</div>').appendTo(pdFilters);
+            $('<div class="pixelDoll-minus">-</div><input type="text" class="pixelDoll-level-input" value="0" /><div class="pixelDoll-plus">+</div>').appendTo(pdFilters);
             for(var i = 0; i < pdStatsLength; i++)
             {
                 $('<div class="pixelDoll-statButton" data-state="0" data-stat="'+pdStats[i]+'">'+pdStats[i]+'</div>').appendTo(pdFilters);
@@ -264,12 +277,38 @@ addons.register({
         {
             $('.pixelDoll-filters').show();
         }
+        // minus button
+        $('.pixelDoll-minus').click(function()
+        {
+            var cVal = parseInt($('.pixelDoll-level-input').val());
+            if(cVal > 0)
+            {
+                $('.pixelDoll-level-input').val(cVal - 1);
+                $('.pixelDoll-level-input').trigger("change");
+            }
+        })
+        // plus button
+        $('.pixelDoll-plus').click(function()
+        {
+            var cVal = parseInt($('.pixelDoll-level-input').val());
+            if(cVal >= 0)
+            {
+                $('.pixelDoll-level-input').val(cVal + 1);
+                $('.pixelDoll-level-input').trigger("change");
+            }
+        })
+        // input filterInv trigger
+        $('.pixelDoll-level-input').change({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory}, function(event) {
+            $('.pixelDoll-level-input').blur();
+            event.data.level = parseInt($(this).val());
+            event.data.filterInv(event.data);
+        })
         // .statButton action, it's here because passing event to another function fired error
-        $('.pixelDoll-filters .pixelDoll-statButton').unbind('click').click({include: this.includeFilter, exclude: this.excludeFilter, level: this.levelFilter, inv: this.buildFilteredInventory}, function(event)
+        $('.pixelDoll-filters .pixelDoll-statButton').unbind('click').click({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory}, function(event)
         {
             var includeFilter = event.data.include;
             var excludeFitler = event.data.exclude;
-            var levelFilter   = event.data.level;
+            event.data.level  = parseInt($('.pixelDoll-level-input').val());
             var stat   = $(this).data('stat');
             var state  = $(this).attr('data-state');
             // clear all selected filters
@@ -309,7 +348,7 @@ addons.register({
                     break;
                 }
             }
-            event.data.inv(event.data);
+            event.data.filterInv(event.data);
         });
     },
     hideEqTooltip: function()

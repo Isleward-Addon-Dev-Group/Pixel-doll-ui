@@ -9,5 +9,7 @@ Changelog is available [here](changelog.md)
 2. Reload Isleward
 3. Open your inventory
 
+## How does Pixel Doll filters work?
+![Filters](filters-how.jpg)
 ## Screenshot
 ![Inventory](https://raw.githubusercontent.com/silencesys/Pixel-doll-ui/master/screenshot.gif)
