@@ -3,6 +3,7 @@ addons.register({
     {
         this.includeFilter = [];
         this.excludeFilter = [];
+        this.itemEquipped  = [];
         events.on('onGetItems', this.onItemsLoad.bind(this));
         events.on('onGetStats', this.onGetStats.bind(this));
 
@@ -15,11 +16,13 @@ addons.register({
     {
         this.buildFilteredInventory();
         this.addQualityBorders();
+        setTimeout(this.addCompareTooltips.bind(this), 1);
     },
     inventoryClick: function()
     {
         this.buildFilteredInventory();
         this.addQualityBorders();
+        setTimeout(this.addCompareTooltips.bind(this), 1);
     },
     inventoryKeyDown: function(key)
     {
@@ -27,6 +30,50 @@ addons.register({
         {
             this.buildFilteredInventory();
             this.addQualityBorders();
+            setTimeout(this.addCompareTooltips.bind(this), 1);
+        }
+    },
+    addCompareTooltips: function()
+    {
+        var invItem  = $('.item');
+        var invItemL = invItem.length;
+        for (var i = 0; i < invItemL; i++)
+        {
+            invItem.eq(i).on('mouseenter', this.addCompareTooltip.bind(this, invItem.eq(i), invItem.eq(i).data('item'))).on('mouseleave', this.hideCompareTooltip.bind(this));
+        }
+    },
+    hideCompareTooltip: function()
+    {
+        $('.pixelDoll-tooltip').hide();
+    },
+    addCompareTooltip: function(el, item, e)
+    {
+        var equipped  = this.itemEquipped;
+        var equippedL = equipped.length;
+        var elOffset = el.offset();
+        var uiOffset = $('.uiInventory').offset();
+        var tooltip  = $('.pixelDoll-tooltip');
+        tooltip.show();
+        tooltip.css({
+            left: ~~(elOffset.left - uiOffset.left + 260),
+            top:  ~~(elOffset.top - uiOffset.top)
+        })
+        for(var i = 0; i < equippedL; i++)
+        {
+            if(equipped[i].slot == item.slot)
+            {
+                item = equipped[i];
+                stats = Object.keys(item.stats).map(function(s) {
+                        return s + ': ' + item.stats[s];
+                    }).join('<br />');
+
+                tooltip.html(
+                "<div class='info'>currently equipped</div>"+
+                "<div class='name q"+item.quality+"'>"+item.name+"</div>"+
+                "<div class='stats'>"+stats+"</div>"+
+                "<div class='level'>level: "+item.level+"</div>"
+                );
+            }
         }
     },
     onItemsLoad: function(items)
@@ -36,13 +83,14 @@ addons.register({
         if( ! this.uiPixelDoll)
         {
             this.uiPixelDoll = $('<div class="pixelDoll"></div>').appendTo(this.uiInventory);
+            $('<div class="pixelDoll-tooltip"></div>').appendTo(this.uiInventory);
         }
         $('.pixelDoll').empty();
         this.addTabs();
         // load items and filter only equipped
-        var equipped = this.loadEquippedItems(items);
+        var equipped = this.loadEquippedItems(items, this);
         // build PixelDoll
-        this.buildPixelDoll(equipped);
+        this.buildPixelDoll(this.itemEquipped);
         this.buildFilteredInventory();
         this.addQualityBorders();
         // Timeout because player data are available later
@@ -126,13 +174,13 @@ addons.register({
         // click on filters button
         $('.pixelDoll-filtersButton').on('click', this.buildFilterBox.bind(this));
     },
-    loadEquippedItems: function(items)
+    loadEquippedItems: function(items, e)
     {
-        var equipped = [];
+        var equipped;
         $(items).each(function(){
             if(this.eq)
             {
-                equipped.push(this);
+                equipped = e.itemEquipped.push(this);
             }
         })
         return equipped;
@@ -241,7 +289,7 @@ addons.register({
                     }
                 }).appendTo('.uiInventory>.grid');
             }
-        }, 1)
+        }, 1);
     },
     buildFilterBox: function()
     {
@@ -298,13 +346,13 @@ addons.register({
             }
         })
         // input filterInv trigger
-        $('.pixelDoll-level-input').change({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory}, function(event) {
+        $('.pixelDoll-level-input').change({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event) {
             $('.pixelDoll-level-input').blur();
             event.data.level = parseInt($(this).val());
             event.data.filterInv(event.data);
         })
         // .statButton action, it's here because passing event to another function fired error
-        $('.pixelDoll-filters .pixelDoll-statButton').unbind('click').click({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory}, function(event)
+        $('.pixelDoll-filters .pixelDoll-statButton').unbind('click').click({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event)
         {
             var includeFilter = event.data.include;
             var excludeFitler = event.data.exclude;
@@ -317,7 +365,8 @@ addons.register({
                 $('.pixelDoll-statButton').attr('data-state', '0');
                 includeFilter.length = 0;
                 excludeFitler.length = 0;
-                levelFilter          = 0;
+                $('.pixelDoll-level-input').val(0);
+                event.data.level = 0;
             }
             else
             {
