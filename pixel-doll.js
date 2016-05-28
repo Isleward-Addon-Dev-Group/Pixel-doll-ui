@@ -35,7 +35,7 @@ addons.register({
     },
     addCompareTooltips: function()
     {
-        var invItem  = $('.item');
+        var invItem  = $('.uiInventory .grid > .item');
         var invItemL = invItem.length;
         for (var i = 0; i < invItemL; i++)
         {
@@ -124,7 +124,7 @@ addons.register({
     addQualityBorders: function()
     {
         setTimeout(function(){
-            var item = $('.item');
+            var item = $('.uiInventory .grid > .item');
             var itemLength = item.length;
 
             for(var i = 0; i < itemLength; i++ )
@@ -222,7 +222,7 @@ addons.register({
             level = data.level;
         }
         setTimeout(function(){
-            var item  = $('.item');
+            var item  = $('.uiInventory .grid > .item');
             var itemL = item.length;
             for(var i = 0; i < itemL; i++)
             {
