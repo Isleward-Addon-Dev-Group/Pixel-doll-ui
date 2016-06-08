@@ -1,4 +1,4 @@
-# Isleward Pixel Doll
+# Isleward PixelDoll
 Adds paper doll ui to the Isleward inventory.
 
 Changelog is available [here](changelog.md)

@@ -1,0 +1,316 @@
+//
+// Variables
+//
+
+$white: #EEE;
+$black: #312136;
+
+$aqua: rgb(13, 100, 135);
+$yellow: rgb(254, 226, 32);
+$gray: rgb(107, 79, 76);
+
+$superGray: rgb(106, 110, 132);
+$hoverGray: rgb(94, 98, 113);
+$darkGray: rgb(55, 48, 65);
+$gray: rgb(60, 63, 76);
+$lightGray: rgb(80, 83, 96);
+$lightGrayBG: rgba(80, 83, 96, 0.1);
+$lightPurpleGray: rgb(74, 67, 83);
+$independendGray: rgba(238,238,238,0.1);
+$tooltip: rgba(49,33,54,0.98);
+
+$yellow: rgb(255, 255, 0);
+$yellowBorder: rgba(255, 255, 0, 0.35);
+$yellowBG: rgba(255, 255, 0, 0.1);
+$purple: rgb(192, 0, 207);
+$purpleBorder: rgba(192, 0, 207, 0.35);
+$purpleBG: rgba(192, 0, 207, 0.1);
+$orange: rgb(255, 108, 4);
+$orangeBorder: rgba(255, 108, 4, 0.35);
+$orangeBG: rgba(255, 108, 4, 0.1);
+$oldOrange: rgb(248, 175, 56);
+
+$red: rgb(186, 13, 45);
+$oldBlue: rgb(10, 113, 186);
+$blue: rgb(7, 170, 214);
+$blueBorder: rgba(7, 170, 214, 0.35);
+$blueBG: rgba(7, 170, 214, 0.1);
+$green: rgb(131, 234, 4);
+
+//
+// Mixins
+//
+
+@mixin select($option)
+{
+    -moz-user-select: $option;
+    -khtml-user-select: $option;
+    -webkit-user-select: $option;
+    user-select: $option;
+}
+
+/**
+ * ui Inventory
+ */
+.uiInventory
+{
+    >.grid
+    {
+        width : 676px !important;
+        height: 525px !important;
+
+        .item
+        {
+            border: 4px solid $lightGray;
+            margin: 0 2px 2px 0;
+
+            &.eq{display: none}
+            &[data-quality="1"]{border-color: $blueBorder;}
+            &[data-quality="2"]{border-color: $yellowBorder;}
+            &[data-quality="3"]{border-color: $purpleBorder;}
+            &[data-quality="4"]{border-color: $orangeBorder;}
+            &.fdNoRelevant{opacity: 0.35;}
+        }
+    }
+
+    >.stats
+    {
+        width : 300px !important;
+        height: 525px !important;
+    }
+
+    .tooltip {z-index: 900;}
+}
+/**
+ * PixelDoll Buttons
+ */
+.pixelDoll-Button
+{
+    width: 60px;
+    height: 64px;
+    top: -4px;
+    left: -64px;
+    background-color: $darkGray;
+    position: absolute;
+    display: block;
+    border-left: 4px solid $gray;
+    border-top: 4px solid $gray;
+    border-bottom: 4px solid $gray;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &:hover{background: $lightPurpleGray;}
+    &.pdActive
+    {
+        border-left: 4px solid $lightGray;
+        border-top: 4px solid $lightGray;
+        border-bottom: 4px solid $lightGray;
+        background-color: $gray;
+        width: 64px;
+
+        &:hover{background-color:  $gray;}
+    }
+
+    &.pdCharacter
+    {
+        background-image: url(https://isleward-test.herokuapp.com/images/items.png);
+        background-position: -4px -68px;
+    }
+    &.pdStats
+    {
+        background-image: url(https://isleward-test.herokuapp.com/images/items.png);
+        background-position: -516px -4px;
+        top: 70px;
+    }
+    &.pdFilters
+    {
+        background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=1.3);
+        background-position: -5px -4px;
+        top: 144px;
+    }
+}
+/**
+ * PixelDoll UI
+ */
+.uiInventory > .pixelDoll
+{
+    position: absolute;
+    width: 300px;
+    height: 525px;
+    margin-right: 32px;
+    position: absolute;
+    background-color: $gray;
+    text-align: center;
+
+    .pdItem
+    {
+        width: 64px;
+        height: 64px;
+        float: left;
+        position: absolute;
+        cursor: pointer;
+        box-sizing: border-box;
+        border: 4px solid #505360;
+
+        &:hover{background-color: $independendGray}
+
+        &[data-slot='head'] {top: 0; left: 0;}
+        &[data-slot='neck'] {top: 116px; left: 0;}
+        &[data-slot='chest'] {top: 230px; left: 0;}
+        &[data-slot='hands'] {top: 344px; left: 0;}
+        &[data-slot='twoHanded'] {top: 458px; left: 0;}
+        &[data-slot='waist'] {top: 0; right: 0;}
+        &[data-slot='legs'] {top: 116px; right: 0;}
+        &[data-slot='feet'] {top: 230px; right: 0;}
+        &[data-slot='finger'] {top: 344px; right: 0;}
+        &[data-slot='trinket'] {top: 458px; right: 0;}
+
+        &[data-quality='0'] {background-color: $lightGrayBG;}
+        &[data-quality='1'] {background-color: $blueBG; border-color: $blueBorder;}
+        &[data-quality='2'] {background-color: $yellowBG; border-color: $yellowBorder;}
+        &[data-quality='3'] {background-color: $purpleBG; border-color: $purpleBorder;}
+        &[data-quality='4'] {background-color: $orangeBG; border-color: $orangeBorder;}
+
+        .icon
+        {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: -4px;
+            top: -4px;
+        }
+    }
+
+    .pdHeading
+    {
+        font-size: 24px;
+        color: $yellow;
+        width: 150px;
+        margin: 0 auto 8px auto;
+    }
+    .pdText
+    {
+        color: $white;
+        margin-bottom: 3px;
+    }
+    .pdCharacterFrame
+    {
+        position: absolute;
+        width: 112px;
+        height: 112px;
+        left: 50%;
+        top: 50%;
+        margin: -66px -56px;
+        overflow: hidden;
+
+        .pdCharacterPreview
+        {
+            width: 32px;
+            height: 32px;
+            image-rendering: pixelated;;
+            zoom: 3.5;
+        }
+    }
+}
+/**
+ * FilterDoll
+ */
+.uiInventory > .filterDoll
+{
+    position: absolute;
+    width: 300px;
+    height: 525px;
+    margin-right: 32px;
+    position: absolute;
+    background-color: #3c3f4c;
+    text-align: center;
+    @include select(none);
+
+    .fdHeading
+    {
+        font-size: 24px;
+        color: $yellow;
+        width: 150px;
+        margin: 0 auto 20px auto;
+    }
+
+    .fdButton
+    {
+        background-color: $lightGray;
+        width: 100%;
+        color: $white;
+        margin-top: 5px;
+        height: 35px;
+        line-height: 27px;
+        cursor: pointer;
+        box-sizing: border-box;
+        border: 4px solid $lightGray;
+
+        &[data-state="1"]{background-color: $superGray; border-color: $superGray;}
+        &[data-state="2"]{background-color: $gray; border-color: $lightGray;}
+        &:hover{background-color: $hoverGray; border-color: $hoverGray;}
+    }
+
+    .fdMiniButton
+    {
+        background-color: $lightGray;
+        width: 35px;
+        color: $white;
+        margin-top: 5px;
+        height: 35px;
+        line-height: 27px;
+        cursor: pointer;
+        box-sizing: border-box;
+        border: 4px solid $lightGray;
+        display: inline-block;
+        vertical-align: top;
+        &:hover{background-color: $hoverGray; border-color: $hoverGray;}
+    }
+
+    .fdLevelInput
+    {
+        width: 220px;
+        margin: 5px 5px 0;
+        height: 35px;
+        box-sizing: border-box;
+        background: $darkGray;
+        border: none;
+        text-align: center;
+        color: $white;
+        font-size: 1.1em;
+        line-height: 35px;
+        vertical-align: top;
+    }
+}
+/**
+ * PixelDollCompare
+ */
+.uiInventory > .pixelDollCompare
+{
+    display: none;
+    border: 4px solid $lightGray;
+    position: absolute;
+    margin-left: -4px;
+    margin-top: -4px;
+    background-color: $tooltip;
+    pointer-events: none;
+    padding: 8px;
+    color: $white;
+    text-align: center;
+    width: 200px;
+    line-height: 18px;
+
+    .name{margin-bottom: 8px;}
+    .stats{margin-bottom: 8px; color: #bbb;}
+    .level{color: #888;}
+    .info{color: #555; margin-bottom: 8px;}
+}
+
+/**
+ * Item quality
+ */
+.q0 {color: $white; }
+.q1 {color: $blue;}
+.q2 {color: $yellow;}
+.q3 {color: $purple;}
+.q4 {color: $orange;}

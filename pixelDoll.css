@@ -1,0 +1,271 @@
+/**
+ * ui Inventory
+ */
+.uiInventory > .grid {
+  width: 676px !important;
+  height: 525px !important; }
+  .uiInventory > .grid .item {
+    border: 4px solid #505360;
+    margin: 0 2px 2px 0; }
+    .uiInventory > .grid .item.eq {
+      display: none; }
+    .uiInventory > .grid .item[data-quality="1"] {
+      border-color: rgba(7, 170, 214, 0.35); }
+    .uiInventory > .grid .item[data-quality="2"] {
+      border-color: rgba(255, 255, 0, 0.35); }
+    .uiInventory > .grid .item[data-quality="3"] {
+      border-color: rgba(192, 0, 207, 0.35); }
+    .uiInventory > .grid .item[data-quality="4"] {
+      border-color: rgba(255, 108, 4, 0.35); }
+    .uiInventory > .grid .item.fdNoRelevant {
+      opacity: 0.35; }
+
+.uiInventory > .stats {
+  width: 300px !important;
+  height: 525px !important; }
+
+.uiInventory .tooltip {
+  z-index: 900; }
+
+/**
+ * PixelDoll Buttons
+ */
+.pixelDoll-Button {
+  width: 60px;
+  height: 64px;
+  top: -4px;
+  left: -64px;
+  background-color: #373041;
+  position: absolute;
+  display: block;
+  border-left: 4px solid #3c3f4c;
+  border-top: 4px solid #3c3f4c;
+  border-bottom: 4px solid #3c3f4c;
+  box-sizing: border-box;
+  cursor: pointer; }
+  .pixelDoll-Button:hover {
+    background: #4a4353; }
+  .pixelDoll-Button.pdActive {
+    border-left: 4px solid #505360;
+    border-top: 4px solid #505360;
+    border-bottom: 4px solid #505360;
+    background-color: #3c3f4c;
+    width: 64px; }
+    .pixelDoll-Button.pdActive:hover {
+      background-color: #3c3f4c; }
+  .pixelDoll-Button.pdCharacter {
+    background-image: url(https://isleward-test.herokuapp.com/images/items.png);
+    background-position: -4px -68px; }
+  .pixelDoll-Button.pdStats {
+    background-image: url(https://isleward-test.herokuapp.com/images/items.png);
+    background-position: -516px -4px;
+    top: 70px; }
+  .pixelDoll-Button.pdFilters {
+    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=1.3);
+    background-position: -5px -4px;
+    top: 144px; }
+
+/**
+ * PixelDoll UI
+ */
+.uiInventory > .pixelDoll {
+  position: absolute;
+  width: 300px;
+  height: 525px;
+  margin-right: 32px;
+  position: absolute;
+  background-color: #3c3f4c;
+  text-align: center; }
+  .uiInventory > .pixelDoll .pdItem {
+    width: 64px;
+    height: 64px;
+    float: left;
+    position: absolute;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 4px solid #505360; }
+    .uiInventory > .pixelDoll .pdItem:hover {
+      background-color: rgba(238, 238, 238, 0.1); }
+    .uiInventory > .pixelDoll .pdItem[data-slot='head'] {
+      top: 0;
+      left: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='neck'] {
+      top: 116px;
+      left: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='chest'] {
+      top: 230px;
+      left: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='hands'] {
+      top: 344px;
+      left: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='twoHanded'] {
+      top: 458px;
+      left: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='waist'] {
+      top: 0;
+      right: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='legs'] {
+      top: 116px;
+      right: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='feet'] {
+      top: 230px;
+      right: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='finger'] {
+      top: 344px;
+      right: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-slot='trinket'] {
+      top: 458px;
+      right: 0; }
+    .uiInventory > .pixelDoll .pdItem[data-quality='0'] {
+      background-color: rgba(80, 83, 96, 0.1); }
+    .uiInventory > .pixelDoll .pdItem[data-quality='1'] {
+      background-color: rgba(7, 170, 214, 0.1);
+      border-color: rgba(7, 170, 214, 0.35); }
+    .uiInventory > .pixelDoll .pdItem[data-quality='2'] {
+      background-color: rgba(255, 255, 0, 0.1);
+      border-color: rgba(255, 255, 0, 0.35); }
+    .uiInventory > .pixelDoll .pdItem[data-quality='3'] {
+      background-color: rgba(192, 0, 207, 0.1);
+      border-color: rgba(192, 0, 207, 0.35); }
+    .uiInventory > .pixelDoll .pdItem[data-quality='4'] {
+      background-color: rgba(255, 108, 4, 0.1);
+      border-color: rgba(255, 108, 4, 0.35); }
+    .uiInventory > .pixelDoll .pdItem .icon {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: -4px;
+      top: -4px; }
+  .uiInventory > .pixelDoll .pdHeading {
+    font-size: 24px;
+    color: yellow;
+    width: 150px;
+    margin: 0 auto 8px auto; }
+  .uiInventory > .pixelDoll .pdText {
+    color: #EEE;
+    margin-bottom: 3px; }
+  .uiInventory > .pixelDoll .pdCharacterFrame {
+    position: absolute;
+    width: 112px;
+    height: 112px;
+    left: 50%;
+    top: 50%;
+    margin: -66px -56px;
+    overflow: hidden; }
+    .uiInventory > .pixelDoll .pdCharacterFrame .pdCharacterPreview {
+      width: 32px;
+      height: 32px;
+      image-rendering: pixelated;
+      zoom: 3.5; }
+
+/**
+ * FilterDoll
+ */
+.uiInventory > .filterDoll {
+  position: absolute;
+  width: 300px;
+  height: 525px;
+  margin-right: 32px;
+  position: absolute;
+  background-color: #3c3f4c;
+  text-align: center;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none; }
+  .uiInventory > .filterDoll .fdHeading {
+    font-size: 24px;
+    color: yellow;
+    width: 150px;
+    margin: 0 auto 20px auto; }
+  .uiInventory > .filterDoll .fdButton {
+    background-color: #505360;
+    width: 100%;
+    color: #EEE;
+    margin-top: 5px;
+    height: 35px;
+    line-height: 27px;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 4px solid #505360; }
+    .uiInventory > .filterDoll .fdButton[data-state="1"] {
+      background-color: #6a6e84;
+      border-color: #6a6e84; }
+    .uiInventory > .filterDoll .fdButton[data-state="2"] {
+      background-color: #3c3f4c;
+      border-color: #505360; }
+    .uiInventory > .filterDoll .fdButton:hover {
+      background-color: #5e6271;
+      border-color: #5e6271; }
+  .uiInventory > .filterDoll .fdMiniButton {
+    background-color: #505360;
+    width: 35px;
+    color: #EEE;
+    margin-top: 5px;
+    height: 35px;
+    line-height: 27px;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 4px solid #505360;
+    display: inline-block;
+    vertical-align: top; }
+    .uiInventory > .filterDoll .fdMiniButton:hover {
+      background-color: #5e6271;
+      border-color: #5e6271; }
+  .uiInventory > .filterDoll .fdLevelInput {
+    width: 220px;
+    margin: 5px 5px 0;
+    height: 35px;
+    box-sizing: border-box;
+    background: #373041;
+    border: none;
+    text-align: center;
+    color: #EEE;
+    font-size: 1.1em;
+    line-height: 35px;
+    vertical-align: top; }
+
+/**
+ * PixelDollCompare
+ */
+.uiInventory > .pixelDollCompare {
+  display: none;
+  border: 4px solid #505360;
+  position: absolute;
+  margin-left: -4px;
+  margin-top: -4px;
+  background-color: rgba(49, 33, 54, 0.98);
+  pointer-events: none;
+  padding: 8px;
+  color: #EEE;
+  text-align: center;
+  width: 200px;
+  line-height: 18px; }
+  .uiInventory > .pixelDollCompare .name {
+    margin-bottom: 8px; }
+  .uiInventory > .pixelDollCompare .stats {
+    margin-bottom: 8px;
+    color: #bbb; }
+  .uiInventory > .pixelDollCompare .level {
+    color: #888; }
+  .uiInventory > .pixelDollCompare .info {
+    color: #555;
+    margin-bottom: 8px; }
+
+/**
+ * Item quality
+ */
+.q0 {
+  color: #EEE; }
+
+.q1 {
+  color: #07aad6; }
+
+.q2 {
+  color: yellow; }
+
+.q3 {
+  color: #c000cf; }
+
+.q4 {
+  color: #ff6c04; }

@@ -1,10 +1,18 @@
 # Isleward Pixel Doll changelog
+### 1.9.4
+---
+* item quality colours updated with game
+* stylesheets were rewritten to scss
+* elements were renamed
+
 ### 1.9
+---
 * added include filter and improved filtering "algorithm"
 * added filtering by level
 * extended inventory tooltips which now compare items with your equip
 
 ### 1.8.2
+---
 * fixed issue that prevent filters to be applied
 * fixed issue that filters sometimes failed when item was dropped or equipped
 

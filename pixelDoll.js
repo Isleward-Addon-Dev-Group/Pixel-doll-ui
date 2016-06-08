@@ -44,7 +44,7 @@ addons.register({
     },
     hideCompareTooltip: function()
     {
-        $('.pixelDoll-tooltip').hide();
+        $('.pixelDollCompare').hide();
     },
     addCompareTooltip: function(el, item, e)
     {
@@ -52,7 +52,7 @@ addons.register({
         var equippedL = equipped.length;
         var elOffset = el.offset();
         var uiOffset = $('.uiInventory').offset();
-        var tooltip  = $('.pixelDoll-tooltip');
+        var tooltip  = $('.pixelDollCompare');
         tooltip.show();
         tooltip.css({
             left: ~~(elOffset.left - uiOffset.left + 260),
@@ -83,7 +83,7 @@ addons.register({
         if( ! this.uiPixelDoll)
         {
             this.uiPixelDoll = $('<div class="pixelDoll"></div>').appendTo(this.uiInventory);
-            $('<div class="pixelDoll-tooltip"></div>').appendTo(this.uiInventory);
+            $('<div class="pixelDollCompare"></div>').appendTo(this.uiInventory);
         }
         $('.pixelDoll').empty();
         this.addTabs();
@@ -96,28 +96,28 @@ addons.register({
         setTimeout(this.addCompareTooltips.bind(this), 1);
         // Timeout because player data are available later
         setTimeout(function(){
-            $('<div class="pixelDoll-character-box"></div>').appendTo('.pixelDoll');
-            $('<div class="pixelDoll-heading">'+window.player.name+'</div>').appendTo('.pixelDoll');
-            $('<div class="pixelDoll-level pixelDoll-text">level '+window.player.level+'</div>').appendTo('.pixelDoll');
-            $('<div class="pixelDoll-class pixelDoll-text">class '+window.player.class+'</div>').appendTo('.pixelDoll');
+            $('<div class="pdCharacterFrame"></div>').appendTo('.pixelDoll');
+            $('<div class="pdHeading">'+window.player.name+'</div>').appendTo('.pixelDoll');
+            $('<div class="pdLevel pdText">level '+window.player.level+'</div>').appendTo('.pixelDoll');
+            $('<div class="pdClass pdText">class '+window.player.class+'</div>').appendTo('.pixelDoll');
 
             spriteY = ~~(window.player.cell / 8);
             spriteX = window.player.cell - (spriteY * 8);
             spriteY = -(spriteY * 32);
             spriteX = -(spriteX * 32);
 
-            var character = $('<div class="pixelDoll-character"></div>').appendTo('.pixelDoll-character-box');
+            var character = $('<div class="pdCharacterPreview"></div>').appendTo('.pdCharacterFrame');
             character.css('background', 'url("../../../images/charas.png") ' + spriteX + 'px ' + spriteY + 'px');
         }, 0.1);
     },
     onGetStats: function(stats)
     {
-        if($('.pixelDoll-level').html())
+        if($('.pixelDoll>.pdLevel').html())
         {
-            var currentLevel = parseInt($('.pixelDoll-level').html().slice(6));
+            var currentLevel = parseInt($('.pdLevel').html().slice(6));
             if(currentLevel != stats.level)
             {
-                $('.pixelDoll-level').html('level ' + stats.level);
+                $('.pixelDoll>.pdLevel').html('level ' + stats.level);
             }
         }
     },
@@ -140,40 +140,40 @@ addons.register({
         // prevent duplication
         if( ! this.buttonPixelDoll && ! this.buttonStats)
         {
-            this.buttonPixelDoll = $('<div class="pixelDoll-charsButton pixelDoll-active"></div>').appendTo(this.uiInventory);
-            this.buttonStats     = $('<div class="pixelDoll-statsButton"></div>').appendTo(this.uiInventory);
-            this.buttonFilters   = $('<div class="pixelDoll-filtersButton"></div>').appendTo(this.uiInventory);
+            this.buttonPixelDoll = $('<div class="pixelDoll-Button pdCharacter pdActive"></div>').appendTo(this.uiInventory);
+            this.buttonStats     = $('<div class="pixelDoll-Button pdStats"></div>').appendTo(this.uiInventory);
+            this.buttonFilters   = $('<div class="pixelDoll-Button pdFilters"></div>').appendTo(this.uiInventory);
         }
         // click on pixelDoll
         this.buttonStats.on('click', function() {
             $('.pixelDoll').hide();
-            $('.pixelDoll-filters').hide();
-            $(this).addClass('pixelDoll-active');
-            if($('.pixelDoll-charsButton').hasClass('pixelDoll-active'))
+            $('.filterDoll').hide();
+            $(this).addClass('pdActive');
+            if($('.pdCharacter').hasClass('pdActive'))
             {
-                $('.pixelDoll-charsButton').removeClass('pixelDoll-active');
+                $('.pdCharacter').removeClass('pdActive');
             }
-            if($('.pixelDoll-filtersButton').hasClass('pixelDoll-active'))
+            if($('.pdFilters').hasClass('pdActive'))
             {
-                $('.pixelDoll-filtersButton').removeClass('pixelDoll-active');
+                $('.pdFilters').removeClass('pdActive');
             }
         });
         // click on stats button
         this.buttonPixelDoll.on('click', function() {
             $('.pixelDoll').show();
-            $('.pixelDoll-filters').hide();
-            $(this).addClass('pixelDoll-active');
-            if($('.pixelDoll-statsButton').hasClass('pixelDoll-active'))
+            $('.filterDoll').hide();
+            $(this).addClass('pdActive');
+            if($('.pdStats').hasClass('pdActive'))
             {
-                $('.pixelDoll-statsButton').removeClass('pixelDoll-active');
+                $('.pdStats').removeClass('pdActive');
             }
-            if($('.pixelDoll-filtersButton').hasClass('pixelDoll-active'))
+            if($('.pdFilters').hasClass('pdActive'))
             {
-                $('.pixelDoll-filtersButton').removeClass('pixelDoll-active');
+                $('.pdFilters').removeClass('pdActive');
             }
         });
         // click on filters button
-        $('.pixelDoll-filtersButton').on('click', this.buildFilterBox.bind(this));
+        $('.pdFilters').on('click', this.buildFilterBox.bind(this));
     },
     loadEquippedItems: function(items, e)
     {
@@ -193,7 +193,7 @@ addons.register({
         var pdSlotsLength = pdSlots.length;
         for(var i = 0; i < pdSlotsLength; i++)
         {
-            $('<div class="pixelDoll-item" data-quality="0" data-slot="'+pdSlots[i]+'"></div>').appendTo(this.uiPixelDoll);
+            $('<div class="pdItem" data-quality="0" data-slot="'+pdSlots[i]+'"></div>').appendTo(this.uiPixelDoll);
         }
         // get items
         var itemsLength = items.length;
@@ -203,9 +203,9 @@ addons.register({
             var item = items[i];
             var imgX = item.sprite[0] * 64;
             var imgY = item.sprite[1] * 64;
-            var eqItem = $('.pixelDoll-item[data-slot="'+item.slot+'"]');
+            var eqItem = $('.pdItem[data-slot="'+item.slot+'"]');
             eqItem.attr('data-quality', item.quality)
-                  .html('<div class="pixelDoll-icon" style="background: url(\'../../../images/items.png\') -'+imgX+'px -'+imgY+'px;"></div></div>')
+                  .html('<div class="icon" style="background: url(\'../../../images/items.png\') -'+imgX+'px -'+imgY+'px;"></div></div>')
                   .on('mouseenter', this.showEqTooltip.bind(this, item, eqItem))
                   .on('mouseleave', this.hideEqTooltip.bind());
         }
@@ -214,7 +214,7 @@ addons.register({
     {
         var exl   = this.excludeFilter;
         var incl  = this.includeFilter;
-        var level = ($('.pixelDoll-level-input').val()) ? parseInt($('.pixelDoll-level-input').val()) : '0';
+        var level = ($('.fdLevelInput').val()) ? parseInt($('.fdLevelInput').val()) : '0';
         if(data)
         {
             exl   = data.exclude;
@@ -259,11 +259,11 @@ addons.register({
                 item.eq(i).attr('data-relevance', rel * -1);
                 if(item.eq(i).attr('data-relevance') > 0)
                 {
-                    item.eq(i).addClass('pixelDoll-noRelevant');
+                    item.eq(i).addClass('fdNoRelevant');
                 }
                 if(item.eq(i).attr('data-relevance') <= 0)
                 {
-                    item.eq(i).removeClass('pixelDoll-noRelevant');
+                    item.eq(i).removeClass('fdNoRelevant');
                 }
             }
             if(exl.length > 0 || incl.length > 0 || level > 0)
@@ -297,14 +297,14 @@ addons.register({
         // hide Pixeldoll if is open
         $('.pixelDoll').hide();
         // set button state
-        $('.pixelDoll-filtersButton').addClass('pixelDoll-active');
-        if($('.pixelDoll-statsButton').hasClass('pixelDoll-active'))
+        $('.pdFilters').addClass('pdActive');
+        if($('.pdStats').hasClass('pdActive'))
         {
-            $('.pixelDoll-statsButton').removeClass('pixelDoll-active');
+            $('.pdStats').removeClass('pdActive');
         }
-        if($('.pixelDoll-charsButton').hasClass('pixelDoll-active'))
+        if($('.pdCharacter').hasClass('pdActive'))
         {
-            $('.pixelDoll-charsButton').removeClass('pixelDoll-active');
+            $('.pdCharacter').removeClass('pdActive');
         }
         // build filters if not exist
         if( ! this.uiPixelDollFilters)
@@ -313,60 +313,60 @@ addons.register({
             var pdStats = ['manaMax','regenMana','hpMax','regenHp','str','int','dex','magicFind','addCritChance','armor', 'clear filters'];
             var pdStatsLength = pdStats.length;
 
-            this.uiPixelDollFilters = $('<div class="pixelDoll-filters"></div>').appendTo('.uiInventory');
-            var pdFilters = $('.pixelDoll-filters').empty();
-            $('<div class="pixelDoll-heading">Filter</div>').appendTo(pdFilters);
-            $('<div class="pixelDoll-minus">-</div><input type="text" class="pixelDoll-level-input" value="0" /><div class="pixelDoll-plus">+</div>').appendTo(pdFilters);
+            this.uiPixelDollFilters = $('<div class="filterDoll"></div>').appendTo('.uiInventory');
+            var pdFilters = $('.filterDoll').empty();
+            $('<div class="fdHeading">Filter</div>').appendTo(pdFilters);
+            $('<div class="fdLevelMinus fdMiniButton">-</div><input type="text" class="fdLevelInput" value="0" /><div class="fdLevelPlus fdMiniButton">+</div>').appendTo(pdFilters);
             for(var i = 0; i < pdStatsLength; i++)
             {
-                $('<div class="pixelDoll-statButton" data-state="0" data-stat="'+pdStats[i]+'">'+pdStats[i]+'</div>').appendTo(pdFilters);
+                $('<div class="fdButton" data-state="0" data-stat="'+pdStats[i]+'">'+pdStats[i]+'</div>').appendTo(pdFilters);
             }
         }
         else
         {
-            $('.pixelDoll-filters').show();
+            $('.filterDoll').show();
         }
         // minus button
-        $('.pixelDoll-minus').click(function()
+        $('.fdLevelMinus').click(function()
         {
-            var cVal = parseInt($('.pixelDoll-level-input').val());
+            var cVal = parseInt($('.fdLevelInput').val());
             if(cVal > 0)
             {
-                $('.pixelDoll-level-input').val(cVal - 1);
-                $('.pixelDoll-level-input').trigger("change");
+                $('.fdLevelInput').val(cVal - 1);
+                $('.fdLevelInput').trigger("change");
             }
         })
         // plus button
-        $('.pixelDoll-plus').click(function()
+        $('.fdLevelPlus').click(function()
         {
-            var cVal = parseInt($('.pixelDoll-level-input').val());
+            var cVal = parseInt($('.fdLevelInput').val());
             if(cVal >= 0)
             {
-                $('.pixelDoll-level-input').val(cVal + 1);
-                $('.pixelDoll-level-input').trigger("change");
+                $('.fdLevelInput').val(cVal + 1);
+                $('.fdLevelInput').trigger("change");
             }
         })
         // input filterInv trigger
-        $('.pixelDoll-level-input').change({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event) {
-            $('.pixelDoll-level-input').blur();
+        $('.fdLevelInput').change({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event) {
+            $('.fdLevelInput').blur();
             event.data.level = parseInt($(this).val());
             event.data.filterInv(event.data);
         })
         // .statButton action, it's here because passing event to another function fired error
-        $('.pixelDoll-filters .pixelDoll-statButton').unbind('click').click({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event)
+        $('.filterDoll .fdButton').unbind('click').click({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event)
         {
             var includeFilter = event.data.include;
             var excludeFitler = event.data.exclude;
-            event.data.level  = parseInt($('.pixelDoll-level-input').val());
+            event.data.level  = parseInt($('.fdLevelInput').val());
             var stat   = $(this).data('stat');
             var state  = $(this).attr('data-state');
             // clear all selected filters
             if(stat == 'clear filters')
             {
-                $('.pixelDoll-statButton').attr('data-state', '0');
+                $('.fdButton').attr('data-state', '0');
                 includeFilter.length = 0;
                 excludeFitler.length = 0;
-                $('.pixelDoll-level-input').val(0);
+                $('.fdLevelInput').val(0);
                 event.data.level = 0;
             }
             else
