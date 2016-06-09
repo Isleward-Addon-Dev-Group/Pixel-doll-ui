@@ -9,6 +9,13 @@ Changelog is available [here](changelog.md)
 2. Reload Isleward
 3. Open your inventory
 
+## Advanced filter options
+Level input field allows you use few operators for better seraching
+* `- 10` displays items with level below given level
+* `+ 10` displays items with level above given level
+* `! 10` hide items with given level
+* `-+ 10 5` show items with level between range, third parameter is range and is optional (default is 10)
+
 ## How does Pixel Doll filters work?
 ![Filters](filters-how.jpg)
 ## Screenshot

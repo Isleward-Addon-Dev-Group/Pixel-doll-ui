@@ -1,4 +1,15 @@
 # Isleward Pixel Doll changelog
+
+### 1.10.0
+---
+* Advanced filtering - use custom operators in level field
+    * `- 10` displays items with level below given level
+    * `+ 10` displays items with level above given level
+    * `! 10` hide items with given level
+    * `-+ 10 5` show items with level between range, third parameter is range and is optional (default is 10)
+* fixed bug where `+` and `-` buttons increased and decreased level value by random numbers
+
+
 ### 1.9.4
 ---
 * item quality colours updated with game

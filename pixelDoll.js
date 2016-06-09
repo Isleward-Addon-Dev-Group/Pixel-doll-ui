@@ -214,14 +214,30 @@ addons.register({
     {
         var exl   = this.excludeFilter;
         var incl  = this.includeFilter;
-        var level = ($('.fdLevelInput').val()) ? parseInt($('.fdLevelInput').val()) : '0';
+        var level = ($('.fdLevelInput').val()) ? parseInt($('.fdLevelInput').val()) : "0";
+        var limit = 10;
+        if(isNaN(level))
+        {
+                var rawValue = $('.fdLevelInput').val();
+                var value    = rawValue.split(' ');
+                var level        = value[1];
+                var operator     = value[0];
+                if(value[2] !== undefined) var limit = value[2];
+                if(isNaN(level))
+                {
+                    level = 0;
+                    console.log('WARNING-PIXELDOLL: Second parameter must be a number.');
+                }
+        }
         if(data)
         {
-            exl   = data.exclude;
-            incl  = data.include;
-            level = data.level;
+            exl      = data.exclude;
+            incl     = data.include;
+            level    = data.level;
+            operator = data.operator;
+            limit    = data.limit;
         }
-        setTimeout(function(){
+        var filter = function() {
             var item  = $('.uiInventory .grid > .item');
             var itemL = item.length;
             for(var i = 0; i < itemL; i++)
@@ -237,9 +253,45 @@ addons.register({
                     {
                         rel = rel + iStats[iStatsK];
                         // if level is set
-                        if(iLevel == level)
+                        if(operator == '+')
                         {
-                            rel = rel * 10;
+                            if(iLevel >= level)
+                            {
+                                rel = rel * 10;
+                            }
+                            else{rel = -1;}
+                        }
+                        else if(operator == '-')
+                        {
+                            if(iLevel <= level)
+                            {
+                                rel = rel * 10;
+                            }
+                            else{rel = -1;}
+                        }
+                        else if(operator == '!')
+                        {
+                            if(iLevel == level)
+                            {
+                                rel = -1;
+                            }
+                        }
+                        else if(operator == '-+')
+                        {
+                            rel = -1;
+                            uplimit  = parseInt(level) + parseInt(limit);
+                            lowlimit = parseInt(level) - parseInt(limit);
+                            if(lowlimit <= iLevel && uplimit >= iLevel)
+                            {
+                                rel = rel + iLevel;
+                            }
+                        }
+                    }
+                    else if(level > 0 && operator == '+' && $.inArray(iStatsK, incl) <= 0 || level > 0 && operator == '-' && $.inArray(iStatsK, incl) <= 0 || level > 0 && operator == '-+' && $.inArray(iStatsK, incl) <= 0)
+                    {
+                        if(rel <= 0)
+                        {
+                            rel = -1;
                         }
                     }
                     if($.inArray(iStatsK, exl) >= 0)
@@ -249,7 +301,40 @@ addons.register({
                     // level filtering
                     if(exl.length == 0 && incl.length == 0 && level > 0)
                     {
-                        if(iLevel == level)
+                        if(operator == '+')
+                        {
+                            rel = -1;
+                            if(iLevel >= level)
+                            {
+                                rel = iLevel * 10;
+                            }
+                        }
+                        else if(operator == '-')
+                        {
+                            rel = -1;
+                            if(iLevel <= level)
+                            {
+                                rel = iLevel * 10;
+                            }
+                        }
+                        else if(operator == '!')
+                        {
+                            if(iLevel == level)
+                            {
+                                rel = -1;
+                            }
+                        }
+                        else if(operator == '-+')
+                        {
+                            rel = -1;
+                            uplimit  = parseInt(level) + parseInt(limit);
+                            lowlimit = parseInt(level) - parseInt(limit);
+                            if(lowlimit <= iLevel && uplimit >= iLevel)
+                            {
+                                rel = iLevel * 10;
+                            }
+                        }
+                        else if(iLevel == level && operator == null)
                         {
                             rel = iLevel;
                         }
@@ -290,7 +375,8 @@ addons.register({
                     }
                 }).appendTo('.uiInventory>.grid');
             }
-        }, 1);
+        }
+        setTimeout(filter, 1);
     },
     buildFilterBox: function()
     {
@@ -327,29 +413,82 @@ addons.register({
             $('.filterDoll').show();
         }
         // minus button
-        $('.fdLevelMinus').click(function()
+        $('.fdLevelMinus').unbind('click').click(function()
         {
             var cVal = parseInt($('.fdLevelInput').val());
-            if(cVal > 0)
+            var cn   = null;
+            if(isNaN(cVal))
             {
-                $('.fdLevelInput').val(cVal - 1);
+                var value = $('.fdLevelInput').val();
+                var split = value.split(' ');
+                var level = parseInt(split[1]) -     1;
+                var operator = split[0];
+                var limit = '';
+                if(split[2] !== undefined) limit = ' '+split[2];
+                cVal = operator+' '+level+limit;
+                cn = split[1];
+            }
+            else
+            {
+                cn = cVal;
+                cVal = cVal - 1;
+            }
+            if(cn > 0)
+            {
+                $('.fdLevelInput').val(cVal);
                 $('.fdLevelInput').trigger("change");
             }
         })
         // plus button
-        $('.fdLevelPlus').click(function()
+        $('.fdLevelPlus').unbind('click').click(function()
         {
             var cVal = parseInt($('.fdLevelInput').val());
-            if(cVal >= 0)
+            var cn   = null;
+            if(isNaN(cVal))
             {
-                $('.fdLevelInput').val(cVal + 1);
+                var value = $('.fdLevelInput').val();
+                var split = value.split(' ');
+                var level = parseInt(split[1]) + 1;
+                var operator = split[0];
+                var limit = '';
+                if(split[2] !== undefined) limit = ' '+split[2];
+                cVal = operator+' '+level+limit;
+                cn = split[1];
+            }
+            else
+            {
+                cVal = cVal + 1;
+                cn = cVal;
+            }
+            if(cn >= 0)
+            {
+                $('.fdLevelInput').val(cVal);
                 $('.fdLevelInput').trigger("change");
             }
         })
         // input filterInv trigger
+        var that = this;
         $('.fdLevelInput').change({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event) {
             $('.fdLevelInput').blur();
-            event.data.level = parseInt($(this).val());
+            var level    = parseInt($(this).val());
+            var operator = null;
+            var limit    = 10;
+            if(isNaN(level))
+            {
+                var rawValue = $(this).val();
+                var value    = rawValue.split(' ');
+                level        = value[1];
+                operator     = value[0];
+                if(value[2] !== undefined) limit = value[2];
+                if(isNaN(level))
+                {
+                    level = 0;
+                    console.log('WARNING-PIXELDOLL: Second parameter must be a number.');
+                }
+            }
+            event.data.limit = limit;
+            event.data.operator = operator;
+            event.data.level = level;
             event.data.filterInv(event.data);
         })
         // .statButton action, it's here because passing event to another function fired error
@@ -357,7 +496,25 @@ addons.register({
         {
             var includeFilter = event.data.include;
             var excludeFitler = event.data.exclude;
-            event.data.level  = parseInt($('.fdLevelInput').val());
+            var level    = parseInt($('.fdLevelInput').val());
+            var operator = null;
+            var limit    = 10;
+            if(isNaN(level))
+            {
+                var rawValue = $('.fdLevelInput').val();
+                var value    = rawValue.split(' ');
+                level        = value[1];
+                operator     = value[0];
+                if(value[2] !== undefined) limit = value[2];
+                if(isNaN(level))
+                {
+                    level = 0;
+                    console.log('WARNING-PIXELDOLL: Second parameter must be a number.');
+                }
+            }
+            event.data.limit = limit;
+            event.data.operator = operator;
+            event.data.level = level;
             var stat   = $(this).data('stat');
             var state  = $(this).attr('data-state');
             // clear all selected filters
