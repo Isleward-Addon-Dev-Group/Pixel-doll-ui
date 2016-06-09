@@ -10,7 +10,7 @@ Changelog is available [here](changelog.md)
 3. Open your inventory
 
 ## Advanced filter options
-Level input field allows you use few operators for better seraching
+Level input field allows you use few operators for better seraching. Separator is always and only space `' '`.
 * `- 10` displays items with level below given level
 * `+ 10` displays items with level above given level
 * `! 10` hide items with given level
