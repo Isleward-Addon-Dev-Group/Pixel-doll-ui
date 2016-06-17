@@ -1,5 +1,12 @@
 # Isleward Pixel Doll changelog
 
+### 1.10.1
+---
+* fixed rendering issue in new version of Isleward
+* fixed filtering issue with materials
+* fixed compare tooltips on empty slots
+* added quality borders to items
+
 ### 1.10.0
 ---
 * Advanced filtering - use custom operators in level field

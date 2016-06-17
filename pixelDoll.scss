@@ -1,41 +1,45 @@
 //
 // Variables
 //
+// ITEM QUALITY
+$q0: rgb(242, 245, 245);
+$q1: rgb(63, 167, 221);
+$q2: rgb(255, 235, 56);
+$q3: rgb(162, 78, 255);
+$q4: rgb(255, 105, 66);
 
-$white: #EEE;
-$black: #312136;
+$q0border: rgba(242, 245, 245, 0.35);
+$q1border: rgba(63, 167, 221, 0.35);
+$q2border: rgba(255, 235, 56, 0.35);
+$q3border: rgba(162, 78, 255, 0.35);
+$q4border: rgba(255, 105, 66, 0.35);
 
-$aqua: rgb(13, 100, 135);
-$yellow: rgb(254, 226, 32);
-$gray: rgb(107, 79, 76);
+$q0bg: rgba(242, 245, 245, 0.15);
+$q1bg: rgba(63, 167, 221, 0.15);
+$q2bg: rgba(255, 235, 56, 0.15);
+$q3bg: rgba(162, 78, 255, 0.15);
+$q4bg: rgba(255, 105, 66, 0.15);
 
-$superGray: rgb(106, 110, 132);
-$hoverGray: rgb(94, 98, 113);
-$darkGray: rgb(55, 48, 65);
-$gray: rgb(60, 63, 76);
-$lightGray: rgb(80, 83, 96);
-$lightGrayBG: rgba(80, 83, 96, 0.1);
-$lightPurpleGray: rgb(74, 67, 83);
-$independendGray: rgba(238,238,238,0.1);
-$tooltip: rgba(49,33,54,0.98);
+// NEW COLOUR PALATTE
 
-$yellow: rgb(255, 255, 0);
-$yellowBorder: rgba(255, 255, 0, 0.35);
-$yellowBG: rgba(255, 255, 0, 0.1);
-$purple: rgb(192, 0, 207);
-$purpleBorder: rgba(192, 0, 207, 0.35);
-$purpleBG: rgba(192, 0, 207, 0.1);
-$orange: rgb(255, 108, 4);
-$orangeBorder: rgba(255, 108, 4, 0.35);
-$orangeBG: rgba(255, 108, 4, 0.1);
-$oldOrange: rgb(248, 175, 56);
+$grey100: rgb(252, 252, 252);
+$grey200: rgb(192, 195, 207);
+$grey300: rgb(146, 147, 152);
+$grey400: rgb(105, 105, 110);
+$grey500: rgb(80, 83, 96);
+$grey600: rgb(60, 63, 76);
+$grey700: rgb(55, 48, 65);
+$grey800: rgb(49, 33, 54);
+$grey200a: rgba(192, 195, 207, 0.1);
+$grey800a: rgba(49, 33, 54, 0.95);
+$grey500a: rgba(80, 83, 96, 0.1);
 
-$red: rgb(186, 13, 45);
-$oldBlue: rgb(10, 113, 186);
-$blue: rgb(7, 170, 214);
-$blueBorder: rgba(7, 170, 214, 0.35);
-$blueBG: rgba(7, 170, 214, 0.1);
-$green: rgb(131, 234, 4);
+$blue100: rgb(72, 237, 255);
+$blue200: rgb(63, 167, 221);
+$blue300: rgb(58, 113, 186);
+$blue400: rgb(66, 84, 141);
+
+$red400: rgb(128, 35, 67);
 
 //
 // Mixins
@@ -54,29 +58,34 @@ $green: rgb(131, 234, 4);
  */
 .uiInventory
 {
+    border-right: 8px solid $grey600;
     >.grid
     {
-        width : 676px !important;
-        height: 525px !important;
+        width : 664px !important;
+        height: 522px !important;
 
         .item
         {
-            border: 4px solid $lightGray;
-            margin: 0 2px 2px 0;
+            border: 4px solid $q0border;
+            margin: 0 8px 8px 0 !important;
 
             &.eq{display: none}
-            &[data-quality="1"]{border-color: $blueBorder;}
-            &[data-quality="2"]{border-color: $yellowBorder;}
-            &[data-quality="3"]{border-color: $purpleBorder;}
-            &[data-quality="4"]{border-color: $orangeBorder;}
+            &[data-quality="1"]{border-color: $q1border;}
+            &[data-quality="2"]{border-color: $q2border;}
+            &[data-quality="3"]{border-color: $q3border;}
+            &[data-quality="4"]{border-color: $q4border;}
             &.fdNoRelevant{opacity: 0.35;}
+            &:nth-child(8n)
+            {
+                margin: 0 8px 8px 0 !important;
+            }
         }
     }
 
     >.stats
     {
-        width : 300px !important;
-        height: 525px !important;
+        width : 316px !important;
+        height: 557px !important;
     }
 
     .tooltip {z-index: 900;}
@@ -86,47 +95,41 @@ $green: rgb(131, 234, 4);
  */
 .pixelDoll-Button
 {
-    width: 60px;
+    width: 64px;
     height: 64px;
-    top: -4px;
+    top: 0px;
     left: -64px;
-    background-color: $darkGray;
+    background-color: $grey700;
     position: absolute;
     display: block;
-    border-left: 4px solid $gray;
-    border-top: 4px solid $gray;
-    border-bottom: 4px solid $gray;
     box-sizing: border-box;
     cursor: pointer;
 
-    &:hover{background: $lightPurpleGray;}
+    &:hover{background: $grey600;}
     &.pdActive
     {
-        border-left: 4px solid $lightGray;
-        border-top: 4px solid $lightGray;
-        border-bottom: 4px solid $lightGray;
-        background-color: $gray;
+        background-color: $grey600;
         width: 64px;
 
-        &:hover{background-color:  $gray;}
+        &:hover{background-color:  $grey600;}
     }
 
     &.pdCharacter
     {
         background-image: url(https://isleward-test.herokuapp.com/images/items.png);
-        background-position: -4px -68px;
+        background-position: 0px -64px;
     }
     &.pdStats
     {
         background-image: url(https://isleward-test.herokuapp.com/images/items.png);
-        background-position: -516px -4px;
-        top: 70px;
+        background-position: -512px 0px;
+        top: 74px;
     }
     &.pdFilters
     {
         background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=1.3);
-        background-position: -5px -4px;
-        top: 144px;
+        background-position: -1px 0px;
+        top: 148px;
     }
 }
 /**
@@ -136,11 +139,12 @@ $green: rgb(131, 234, 4);
 {
     position: absolute;
     width: 300px;
-    height: 525px;
+    height: 557px;
     margin-right: 32px;
     position: absolute;
-    background-color: $gray;
+    background-color: $grey600;
     text-align: center;
+    left: 16px;
 
     .pdItem
     {
@@ -152,24 +156,24 @@ $green: rgb(131, 234, 4);
         box-sizing: border-box;
         border: 4px solid #505360;
 
-        &:hover{background-color: $independendGray}
+        &:hover{background-color: $grey200a}
 
-        &[data-slot='head'] {top: 0; left: 0;}
-        &[data-slot='neck'] {top: 116px; left: 0;}
-        &[data-slot='chest'] {top: 230px; left: 0;}
-        &[data-slot='hands'] {top: 344px; left: 0;}
-        &[data-slot='twoHanded'] {top: 458px; left: 0;}
-        &[data-slot='waist'] {top: 0; right: 0;}
-        &[data-slot='legs'] {top: 116px; right: 0;}
-        &[data-slot='feet'] {top: 230px; right: 0;}
-        &[data-slot='finger'] {top: 344px; right: 0;}
-        &[data-slot='trinket'] {top: 458px; right: 0;}
+        &[data-slot='head'] {top: 16px; left: 0;}
+        &[data-slot='neck'] {top: 132px; left: 0;}
+        &[data-slot='chest'] {top: 246px; left: 0;}
+        &[data-slot='hands'] {top: 360px; left: 0;}
+        &[data-slot='twoHanded'] {top: 474px; left: 0;}
+        &[data-slot='waist'] {top: 16px; right: 0;}
+        &[data-slot='legs'] {top: 132px; right: 0;}
+        &[data-slot='feet'] {top: 246px; right: 0;}
+        &[data-slot='finger'] {top: 360px; right: 0;}
+        &[data-slot='trinket'] {top: 474px; right: 0;}
 
-        &[data-quality='0'] {background-color: $lightGrayBG;}
-        &[data-quality='1'] {background-color: $blueBG; border-color: $blueBorder;}
-        &[data-quality='2'] {background-color: $yellowBG; border-color: $yellowBorder;}
-        &[data-quality='3'] {background-color: $purpleBG; border-color: $purpleBorder;}
-        &[data-quality='4'] {background-color: $orangeBG; border-color: $orangeBorder;}
+        &[data-quality='0'] {background-color: $grey500a;}
+        &[data-quality='1'] {background-color: $q1bg; border-color: $q1border;}
+        &[data-quality='2'] {background-color: $q2bg; border-color: $q2border;}
+        &[data-quality='3'] {background-color: $q3bg; border-color: $q3border;}
+        &[data-quality='4'] {background-color: $q4bg; border-color: $q4border;}
 
         .icon
         {
@@ -184,13 +188,13 @@ $green: rgb(131, 234, 4);
     .pdHeading
     {
         font-size: 24px;
-        color: $yellow;
+        color: $blue200;
         width: 150px;
-        margin: 0 auto 8px auto;
+        margin: 16px auto 8px auto;
     }
     .pdText
     {
-        color: $white;
+        color: $grey100;
         margin-bottom: 3px;
     }
     .pdCharacterFrame
@@ -200,7 +204,7 @@ $green: rgb(131, 234, 4);
         height: 112px;
         left: 50%;
         top: 50%;
-        margin: -66px -56px;
+        margin: -69px -56px;
         overflow: hidden;
 
         .pdCharacterPreview
@@ -219,52 +223,54 @@ $green: rgb(131, 234, 4);
 {
     position: absolute;
     width: 300px;
-    height: 525px;
-    margin-right: 32px;
+    height: 541px;
+    margin-right: 16px;
     position: absolute;
     background-color: #3c3f4c;
+    left: 16px;
+    top: 16px;
     text-align: center;
     @include select(none);
 
     .fdHeading
     {
         font-size: 24px;
-        color: $yellow;
+        color: $blue200;
         width: 150px;
-        margin: 0 auto 20px auto;
+        margin: 0 auto 18px auto;
     }
 
     .fdButton
     {
-        background-color: $lightGray;
+        background-color: $grey500;
         width: 100%;
-        color: $white;
+        color: $grey100;
         margin-top: 5px;
         height: 35px;
         line-height: 27px;
         cursor: pointer;
         box-sizing: border-box;
-        border: 4px solid $lightGray;
+        border: 4px solid $grey500;
 
-        &[data-state="1"]{background-color: $superGray; border-color: $superGray;}
-        &[data-state="2"]{background-color: $gray; border-color: $lightGray;}
-        &:hover{background-color: $hoverGray; border-color: $hoverGray;}
+        &[data-state="1"]{background-color: $blue400; border-color: $blue400;}
+        &[data-state="2"]{background-color: $red400; border-color: $red400;}
+        &:hover{background-color: $grey300; border-color: $grey300;}
     }
 
     .fdMiniButton
     {
-        background-color: $lightGray;
+        background-color: $grey500;
         width: 35px;
-        color: $white;
+        color: $grey100;
         margin-top: 5px;
         height: 35px;
         line-height: 27px;
         cursor: pointer;
         box-sizing: border-box;
-        border: 4px solid $lightGray;
+        border: 4px solid $grey500;
         display: inline-block;
         vertical-align: top;
-        &:hover{background-color: $hoverGray; border-color: $hoverGray;}
+        &:hover{background-color: $grey300; border-color: $grey300;}
     }
 
     .fdLevelInput
@@ -273,10 +279,10 @@ $green: rgb(131, 234, 4);
         margin: 5px 5px 0;
         height: 35px;
         box-sizing: border-box;
-        background: $darkGray;
+        background: $grey700;
         border: none;
         text-align: center;
-        color: $white;
+        color: $grey100;
         font-size: 1.1em;
         line-height: 35px;
         vertical-align: top;
@@ -288,29 +294,46 @@ $green: rgb(131, 234, 4);
 .uiInventory > .pixelDollCompare
 {
     display: none;
-    border: 4px solid $lightGray;
+    border: 4px solid #808496;
     position: absolute;
     margin-left: -4px;
     margin-top: -4px;
-    background-color: $tooltip;
+    background-color: $grey800a;
     pointer-events: none;
     padding: 8px;
-    color: $white;
+    color: #b8c9c9;
     text-align: center;
-    width: 200px;
+    width: 212px;
     line-height: 18px;
 
     .name{margin-bottom: 8px;}
-    .stats{margin-bottom: 8px; color: #bbb;}
-    .level{color: #888;}
-    .info{color: #555; margin-bottom: 8px;}
+    .stats{margin-bottom: 8px; color: #b8c9c9;}
+    .level{color: #779092;}
+    .info{color: #4f6666; margin-bottom: 8px;}
+
+    &[data-quality="1"]{border-color: $q1border !important;}
+    &[data-quality="2"]{border-color: $q2border !important;}
+    &[data-quality="3"]{border-color: $q3border !important;}
+    &[data-quality="4"]{border-color: $q4border !important;}
 }
 
 /**
  * Item quality
  */
-.q0 {color: $white; }
-.q1 {color: $blue;}
-.q2 {color: $yellow;}
-.q3 {color: $purple;}
-.q4 {color: $orange;}
+.q0 {color: $grey100; }
+.q1 {color: $q1;}
+.q2 {color: $q2;}
+.q3 {color: $q3;}
+.q4 {color: $q4;}
+
+/**
+ * Item quality tooltips
+ */
+
+.tooltip
+{
+    &[data-quality="1"]{border-color: $q1border !important;}
+    &[data-quality="2"]{border-color: $q2border !important;}
+    &[data-quality="3"]{border-color: $q3border !important;}
+    &[data-quality="4"]{border-color: $q4border !important;}
+}

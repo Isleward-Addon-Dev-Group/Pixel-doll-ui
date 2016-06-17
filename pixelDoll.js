@@ -48,31 +48,39 @@ addons.register({
     },
     addCompareTooltip: function(el, item, e)
     {
-        var equipped  = this.itemEquipped;
-        var equippedL = equipped.length;
-        var elOffset = el.offset();
-        var uiOffset = $('.uiInventory').offset();
-        var tooltip  = $('.pixelDollCompare');
-        tooltip.show();
-        tooltip.css({
-            left: ~~(elOffset.left - uiOffset.left + 260),
-            top:  ~~(elOffset.top - uiOffset.top)
-        })
-        for(var i = 0; i < equippedL; i++)
-        {
-            if(equipped[i].slot == item.slot)
-            {
-                item = equipped[i];
-                stats = Object.keys(item.stats).map(function(s) {
-                        return s + ': ' + item.stats[s];
-                    }).join('<br />');
+        // original tooltip
+        var oTip = $('.uiInventory .tooltip');
+        oTip.attr('data-quality', item.quality);
 
-                tooltip.html(
-                "<div class='info'>currently equipped</div>"+
-                "<div class='name q"+item.quality+"'>"+item.name+"</div>"+
-                "<div class='stats'>"+stats+"</div>"+
-                "<div class='level'>level: "+item.level+"</div>"
-                );
+        if(item.material == undefined)
+        {
+
+            var equipped  = this.itemEquipped;
+            var equippedL = equipped.length;
+            var elOffset = el.offset();
+            var uiOffset = $('.uiInventory').offset();
+            var tooltip  = $('.pixelDollCompare');
+            tooltip.css({
+                left: ~~(elOffset.left - uiOffset.left + 292),
+                top:  ~~(elOffset.top - uiOffset.top + 4)
+            })
+            for(var i = 0; i < equippedL; i++)
+            {
+                if(equipped[i].slot == item.slot)
+                {
+                    item = equipped[i];
+                    stats = Object.keys(item.stats).map(function(s) {
+                            return s + ': ' + item.stats[s];
+                        }).join('<br />');
+                    tooltip.attr('data-quality', item.quality);
+                    tooltip.html(
+                    "<div class='info'>currently equipped</div>"+
+                    "<div class='name q"+item.quality+"'>"+item.name+"</div>"+
+                    "<div class='stats'>"+stats+"</div>"+
+                    "<div class='level'>level: "+item.level+"</div>"
+                    );
+                    tooltip.show();
+                }
             }
         }
     },
@@ -123,15 +131,18 @@ addons.register({
     },
     addQualityBorders: function()
     {
-        setTimeout(function(){
+         setTimeout(function(){
             var item = $('.uiInventory .grid > .item');
             var itemLength = item.length;
 
             for(var i = 0; i < itemLength; i++ )
             {
-                var bgPosition = item.eq(i).children('.icon').css('background-position').split(' ');
-                item.eq(i).attr('data-quality', item.eq(i).data('item').quality);
-                item.eq(i).children('.icon').css('background-position', (parseInt(bgPosition[0],10)-4) + 'px ' + (parseInt(bgPosition[1],10)-4) + 'px');
+                if(item.eq(i).attr('data-quality') == undefined)
+                {
+                    var bgPosition = item.eq(i).children('.icon').css('background-position').split(' ');
+                    item.eq(i).attr('data-quality', item.eq(i).data('item').quality);
+                    item.eq(i).children('.icon').css('background-position', (parseInt(bgPosition[0],10)-4) + 'px ' + (parseInt(bgPosition[1],10)-4) + 'px');
+                }
             }
         },0.1)
     },
@@ -243,8 +254,8 @@ addons.register({
             for(var i = 0; i < itemL; i++)
             {
                 var rel = 0;
-                var iStats  = item.eq(i).data('item').stats;
-                var iLevel  = item.eq(i).data('item').level;
+                var iStats  = ((item.eq(i).data('item').stats !== undefined) ? item.eq(i).data('item').stats : 'none');
+                var iLevel  = ((item.eq(i).data('item').level !== undefined) ? item.eq(i).data('item').level : 'none');
                 var iStatsL = Object.keys(iStats).length;
                 for(var s = 0; s < iStatsL; s++)
                 {
@@ -569,9 +580,10 @@ addons.register({
         var tooltip  = $('.tooltip');
         tooltip.show();
         tooltip.css({
-            left: ~~(elOffset.left - uiOffset.left + 64),
-            top:  ~~(elOffset.top - uiOffset.top)
+            left: ~~(elOffset.left - uiOffset.left + 74),
+            top:  ~~(elOffset.top - uiOffset.top + 4)
         })
+        tooltip.attr('data-quality', item.quality);
 
         stats = Object.keys(item.stats).map(function(s) {
                 return s + ': ' + item.stats[s];
