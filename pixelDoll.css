@@ -168,6 +168,7 @@
   left: 16px;
   top: 16px;
   text-align: center;
+  display: none;
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;

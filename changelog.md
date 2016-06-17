@@ -1,5 +1,12 @@
 # Isleward Pixel Doll changelog
 
+### 2.0.0
+---
+* completely rewritten javascript part
+* fixed bug which caused wrong material sorting
+* fixed name and character flickering
+* inventory flickering which occurs when items are filtered is currently unsolvable
+
 ### 1.10.1
 ---
 * fixed rendering issue in new version of Isleward

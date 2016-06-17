@@ -230,6 +230,7 @@ $red400: rgb(128, 35, 67);
     left: 16px;
     top: 16px;
     text-align: center;
+    display: none;
     @include select(none);
 
     .fdHeading

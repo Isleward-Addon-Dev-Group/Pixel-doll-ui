@@ -1,582 +1,165 @@
 addons.register({
     init: function(events)
     {
+        // Filters
         this.includeFilter = [];
         this.excludeFilter = [];
-        this.itemEquipped  = [];
+        this.levelFilter   = {
+            'level'    : 0,
+            'operator' : null,
+            'limit'    : 10
+        };
+        // Items
+        this.equipedItems  = [];
+
+        // Events
         events.on('onGetItems', this.onItemsLoad.bind(this));
-        events.on('onGetStats', this.onGetStats.bind(this));
+        events.on('onGetStats', this.onChangeStats.bind(this));
+        events.on('onShowInventory', this.toggleInventory.bind(this));
+        events.on('onKeyDown', this.onKeyDown.bind(this));
+        events.on('onDestroyItems', this.destroyItems.bind(this));
 
-        // binds to default inventory actions
-        events.on('onShowInventory', this.inventoryClick.bind(this));
-        events.on('onKeyDown', this.inventoryKeyDown.bind(this));
-        events.on('onDestroyItems', this.inventoryDestroyItem.bind(this));
     },
-    inventoryDestroyItem: function()
+    toggleInventory: function()
     {
-        this.buildFilteredInventory();
-        this.addQualityBorders();
-        setTimeout(this.addCompareTooltips.bind(this), 1);
-    },
-    inventoryClick: function()
-    {
-        this.buildFilteredInventory();
-        this.addQualityBorders();
-        setTimeout(this.addCompareTooltips.bind(this), 1);
-    },
-    inventoryKeyDown: function(key)
-    {
-        if (key == 'i')
-        {
-            this.buildFilteredInventory();
-            this.addQualityBorders();
-            setTimeout(this.addCompareTooltips.bind(this), 1);
-        }
-    },
-    addCompareTooltips: function()
-    {
-        var invItem  = $('.uiInventory .grid > .item');
-        var invItemL = invItem.length;
-        for (var i = 0; i < invItemL; i++)
-        {
-            invItem.eq(i).on('mouseenter', this.addCompareTooltip.bind(this, invItem.eq(i), invItem.eq(i).data('item'))).on('mouseleave', this.hideCompareTooltip.bind(this));
-        }
-    },
-    hideCompareTooltip: function()
-    {
-        $('.pixelDollCompare').hide();
-    },
-    addCompareTooltip: function(el, item, e)
-    {
-        // original tooltip
-        var oTip = $('.uiInventory .tooltip');
-        oTip.attr('data-quality', item.quality);
+        // UI Elements
+        this.uiInventory  = $('.uiInventory');
+        this.uiPixelDoll  = $('.pixelDoll');
+        this.uiFilterDoll = $('.filterDoll');
+        this.uiCompareTip = $('.pixelDollCompare');
 
-        if(item.material == undefined)
+        // Conditions
+        if(this.uiCompareTip.length <= 0)
         {
-
-            var equipped  = this.itemEquipped;
-            var equippedL = equipped.length;
-            var elOffset = el.offset();
-            var uiOffset = $('.uiInventory').offset();
-            var tooltip  = $('.pixelDollCompare');
-            tooltip.css({
-                left: ~~(elOffset.left - uiOffset.left + 292),
-                top:  ~~(elOffset.top - uiOffset.top + 4)
-            })
-            for(var i = 0; i < equippedL; i++)
-            {
-                if(equipped[i].slot == item.slot)
-                {
-                    item = equipped[i];
-                    stats = Object.keys(item.stats).map(function(s) {
-                            return s + ': ' + item.stats[s];
-                        }).join('<br />');
-                    tooltip.attr('data-quality', item.quality);
-                    tooltip.html(
-                    "<div class='info'>currently equipped</div>"+
-                    "<div class='name q"+item.quality+"'>"+item.name+"</div>"+
-                    "<div class='stats'>"+stats+"</div>"+
-                    "<div class='level'>level: "+item.level+"</div>"
-                    );
-                    tooltip.show();
-                }
-            }
+            this.uiCompareTip = $('<div class="pixelDollCompare"></div>').appendTo(this.uiInventory);
         }
+
+        // Functions
+        this.addInventoryTabs();
+        this.buildPixelDoll();
+        this.buildFilterDoll();
+        this.inventoryBuilders();
     },
     onItemsLoad: function(items)
     {
-        this.uiInventory = $('.uiInventory');
-        // prevent duplication
-        if( ! this.uiPixelDoll)
+        // Variables
+        this.items = items;
+
+        // Conditions
+        this.equipedItems = this.loadEquipedItems();
+
+        // Functions
+        this.addItemsToPixelDoll();
+        this.inventoryBuilders();
+    },
+    inventoryBuilders: function()
+    {
+        this.addQualityBorders();
+        setTimeout(this.filterInventory.bind(this), 1);
+        setTimeout(this.addCompareTooltips.bind(this), 1);
+    },
+    loadEquipedItems: function()
+    {
+        var items = this.items;
+        var equipedItems = [];
+        for(var i = 0; i < items.length; i++)
+        {
+            if(items[i].eq == true)
+            {
+                equipedItems.push(items[i]);
+            }
+        }
+        return equipedItems;
+    },
+    addInventoryTabs: function()
+    {
+        var btnPixelDoll  = $('.pdCharacter');
+        var btnFilterDoll = $('.pdFilters');
+        var btnStatWindow = $('.pdStats');
+        var that          = this;
+
+        if(btnPixelDoll.length <= 0 && btnFilterDoll.length <= 0 && btnStatWindow.length <= 0 )
+        {
+            btnPixelDoll  = $('<div class="pixelDoll-Button pdCharacter pdActive"></div>').appendTo(this.uiInventory);
+            btnStatWindow = $('<div class="pixelDoll-Button pdStats"></div>').appendTo(this.uiInventory);
+            btnFilterDoll = $('<div class="pixelDoll-Button pdFilters"></div>').appendTo(this.uiInventory);
+        }
+
+        btnPixelDoll.on('click', function() {
+            that.uiPixelDoll.show()
+            that.uiFilterDoll.hide();
+            btnFilterDoll.removeClass('pdActive');
+            btnStatWindow.removeClass('pdActive');
+            $(this).addClass('pdActive');
+        })
+
+        btnStatWindow.on('click', function() {
+            that.uiPixelDoll.hide()
+            that.uiFilterDoll.hide();
+            btnPixelDoll.removeClass('pdActive');
+            btnFilterDoll.removeClass('pdActive');
+            $(this).addClass('pdActive');
+        });
+
+        btnFilterDoll.on('click', function() {
+            that.uiPixelDoll.hide()
+            that.uiFilterDoll.show();
+            btnPixelDoll.removeClass('pdActive');
+            btnStatWindow.removeClass('pdActive');
+            $(this).addClass('pdActive');
+        })
+    },
+    buildPixelDoll: function()
+    {
+        if(this.uiPixelDoll.length <= 0)
         {
             this.uiPixelDoll = $('<div class="pixelDoll"></div>').appendTo(this.uiInventory);
-            $('<div class="pixelDollCompare"></div>').appendTo(this.uiInventory);
         }
-        $('.pixelDoll').empty();
-        this.addTabs();
-        // load items and filter only equipped
-        var equipped = this.loadEquippedItems(items, this);
-        // build PixelDoll
-        this.buildPixelDoll(this.itemEquipped);
-        this.buildFilteredInventory();
-        this.addQualityBorders();
-        setTimeout(this.addCompareTooltips.bind(this), 1);
-        // Timeout because player data are available later
-        setTimeout(function(){
-            $('<div class="pdCharacterFrame"></div>').appendTo('.pixelDoll');
-            $('<div class="pdHeading">'+window.player.name+'</div>').appendTo('.pixelDoll');
-            $('<div class="pdLevel pdText">level '+window.player.level+'</div>').appendTo('.pixelDoll');
-            $('<div class="pdClass pdText">class '+window.player.class+'</div>').appendTo('.pixelDoll');
+        if( ! this.uiPixelDoll.html())
+        {
 
+            $('<div class="pdHeading">'+window.player.name+'</div>').appendTo(this.uiPixelDoll);
+            $('<div class="pdLevel pdText">level '+window.player.level+'</div>').appendTo(this.uiPixelDoll);
+            $('<div class="pdClass pdText">class '+window.player.class+'</div>').appendTo(this.uiPixelDoll);
+
+            // add player's character
+            var characterFrame = $('<div class="pdCharacterFrame"></div>').appendTo(this.uiPixelDoll);
             spriteY = ~~(window.player.cell / 8);
             spriteX = window.player.cell - (spriteY * 8);
             spriteY = -(spriteY * 32);
             spriteX = -(spriteX * 32);
-
-            var character = $('<div class="pdCharacterPreview"></div>').appendTo('.pdCharacterFrame');
+            var character = $('<div class="pdCharacterPreview"></div>').appendTo(characterFrame);
             character.css('background', 'url("../../../images/charas.png") ' + spriteX + 'px ' + spriteY + 'px');
-        }, 0.1);
-    },
-    onGetStats: function(stats)
-    {
-        if($('.pixelDoll>.pdLevel').html())
-        {
-            var currentLevel = parseInt($('.pdLevel').html().slice(6));
-            if(currentLevel != stats.level)
-            {
-                $('.pixelDoll>.pdLevel').html('level ' + stats.level);
-            }
-        }
-    },
-    addQualityBorders: function()
-    {
-         setTimeout(function(){
-            var item = $('.uiInventory .grid > .item');
-            var itemLength = item.length;
 
-            for(var i = 0; i < itemLength; i++ )
+            var pdSlots = ['head','neck','chest','hands','twoHanded','waist','legs','feet','finger','trinket'];
+            for(var i = 0; i < pdSlots.length; i++)
             {
-                if(item.eq(i).attr('data-quality') == undefined)
-                {
-                    var bgPosition = item.eq(i).children('.icon').css('background-position').split(' ');
-                    item.eq(i).attr('data-quality', item.eq(i).data('item').quality);
-                    item.eq(i).children('.icon').css('background-position', (parseInt(bgPosition[0],10)-4) + 'px ' + (parseInt(bgPosition[1],10)-4) + 'px');
-                }
+                $('<div class="pdItem" data-quality="0" data-slot="'+pdSlots[i]+'"></div>').appendTo(this.uiPixelDoll);
             }
-        },0.1)
-    },
-    addTabs: function()
-    {
-        // prevent duplication
-        if( ! this.buttonPixelDoll && ! this.buttonStats)
-        {
-            this.buttonPixelDoll = $('<div class="pixelDoll-Button pdCharacter pdActive"></div>').appendTo(this.uiInventory);
-            this.buttonStats     = $('<div class="pixelDoll-Button pdStats"></div>').appendTo(this.uiInventory);
-            this.buttonFilters   = $('<div class="pixelDoll-Button pdFilters"></div>').appendTo(this.uiInventory);
+
+            this.addItemsToPixelDoll();
         }
-        // click on pixelDoll
-        this.buttonStats.on('click', function() {
-            $('.pixelDoll').hide();
-            $('.filterDoll').hide();
-            $(this).addClass('pdActive');
-            if($('.pdCharacter').hasClass('pdActive'))
-            {
-                $('.pdCharacter').removeClass('pdActive');
-            }
-            if($('.pdFilters').hasClass('pdActive'))
-            {
-                $('.pdFilters').removeClass('pdActive');
-            }
-        });
-        // click on stats button
-        this.buttonPixelDoll.on('click', function() {
-            $('.pixelDoll').show();
-            $('.filterDoll').hide();
-            $(this).addClass('pdActive');
-            if($('.pdStats').hasClass('pdActive'))
-            {
-                $('.pdStats').removeClass('pdActive');
-            }
-            if($('.pdFilters').hasClass('pdActive'))
-            {
-                $('.pdFilters').removeClass('pdActive');
-            }
-        });
-        // click on filters button
-        $('.pdFilters').on('click', this.buildFilterBox.bind(this));
     },
-    loadEquippedItems: function(items, e)
+    addItemsToPixelDoll: function()
     {
-        var equipped;
-        $(items).each(function(){
-            if(this.eq)
-            {
-                equipped = e.itemEquipped.push(this);
-            }
-        })
-        return equipped;
-    },
-    buildPixelDoll: function(items)
-    {
-        // build stat slots
-        var pdSlots = ['head','neck','chest','hands','twoHanded','waist','legs','feet','finger','trinket'];
-        var pdSlotsLength = pdSlots.length;
-        for(var i = 0; i < pdSlotsLength; i++)
+        var equipedItems = this.equipedItems;
+        for(var j = 0; j < equipedItems.length; j++)
         {
-            $('<div class="pdItem" data-quality="0" data-slot="'+pdSlots[i]+'"></div>').appendTo(this.uiPixelDoll);
-        }
-        // get items
-        var itemsLength = items.length;
-        // bind items to slots
-        for(var i = 0; i < itemsLength; i++)
-        {
-            var item = items[i];
+            var item = equipedItems[j];
             var imgX = item.sprite[0] * 64;
             var imgY = item.sprite[1] * 64;
-            var eqItem = $('.pdItem[data-slot="'+item.slot+'"]');
-            eqItem.attr('data-quality', item.quality)
-                  .html('<div class="icon" style="background: url(\'../../../images/items.png\') -'+imgX+'px -'+imgY+'px;"></div></div>')
-                  .on('mouseenter', this.showEqTooltip.bind(this, item, eqItem))
-                  .on('mouseleave', this.hideEqTooltip.bind());
-        }
-    },
-    buildFilteredInventory: function(data)
-    {
-        var exl   = this.excludeFilter;
-        var incl  = this.includeFilter;
-        var level = ($('.fdLevelInput').val()) ? parseInt($('.fdLevelInput').val()) : "0";
-        var limit = 10;
-        if(isNaN(level))
-        {
-                var rawValue = $('.fdLevelInput').val();
-                var value    = rawValue.split(' ');
-                var level        = value[1];
-                var operator     = value[0];
-                if(value[2] !== undefined) var limit = value[2];
-                if(isNaN(level))
-                {
-                    level = 0;
-                    console.log('WARNING-PIXELDOLL: Second parameter must be a number.');
-                }
-        }
-        if(data)
-        {
-            exl      = data.exclude;
-            incl     = data.include;
-            level    = data.level;
-            operator = data.operator;
-            limit    = data.limit;
-        }
-        var filter = function() {
-            var item  = $('.uiInventory .grid > .item');
-            var itemL = item.length;
-            for(var i = 0; i < itemL; i++)
-            {
-                var rel = 0;
-                var iStats  = ((item.eq(i).data('item').stats !== undefined) ? item.eq(i).data('item').stats : 'none');
-                var iLevel  = ((item.eq(i).data('item').level !== undefined) ? item.eq(i).data('item').level : 'none');
-                var iStatsL = Object.keys(iStats).length;
-                for(var s = 0; s < iStatsL; s++)
-                {
-                    var iStatsK = Object.keys(iStats)[s];
-                    if($.inArray(iStatsK, incl) >= 0)
-                    {
-                        rel = rel + iStats[iStatsK];
-                        // if level is set
-                        if(operator == '+')
-                        {
-                            if(iLevel >= level)
-                            {
-                                rel = rel * 10;
-                            }
-                            else{rel = -1;}
-                        }
-                        else if(operator == '-')
-                        {
-                            if(iLevel <= level)
-                            {
-                                rel = rel * 10;
-                            }
-                            else{rel = -1;}
-                        }
-                        else if(operator == '!')
-                        {
-                            if(iLevel == level)
-                            {
-                                rel = -1;
-                            }
-                        }
-                        else if(operator == '-+')
-                        {
-                            rel = -1;
-                            uplimit  = parseInt(level) + parseInt(limit);
-                            lowlimit = parseInt(level) - parseInt(limit);
-                            if(lowlimit <= iLevel && uplimit >= iLevel)
-                            {
-                                rel = rel + iLevel;
-                            }
-                        }
-                    }
-                    else if(level > 0 && operator == '+' && $.inArray(iStatsK, incl) <= 0 || level > 0 && operator == '-' && $.inArray(iStatsK, incl) <= 0 || level > 0 && operator == '-+' && $.inArray(iStatsK, incl) <= 0)
-                    {
-                        if(rel <= 0)
-                        {
-                            rel = -1;
-                        }
-                    }
-                    if($.inArray(iStatsK, exl) >= 0)
-                    {
-                        rel--;
-                    }
-                    // level filtering
-                    if(exl.length == 0 && incl.length == 0 && level > 0)
-                    {
-                        if(operator == '+')
-                        {
-                            rel = -1;
-                            if(iLevel >= level)
-                            {
-                                rel = iLevel * 10;
-                            }
-                        }
-                        else if(operator == '-')
-                        {
-                            rel = -1;
-                            if(iLevel <= level)
-                            {
-                                rel = iLevel * 10;
-                            }
-                        }
-                        else if(operator == '!')
-                        {
-                            if(iLevel == level)
-                            {
-                                rel = -1;
-                            }
-                        }
-                        else if(operator == '-+')
-                        {
-                            rel = -1;
-                            uplimit  = parseInt(level) + parseInt(limit);
-                            lowlimit = parseInt(level) - parseInt(limit);
-                            if(lowlimit <= iLevel && uplimit >= iLevel)
-                            {
-                                rel = iLevel * 10;
-                            }
-                        }
-                        else if(iLevel == level && operator == null)
-                        {
-                            rel = iLevel;
-                        }
-                    }
-                }
-                item.eq(i).attr({'data-id': item.eq(i).data('item').id, 'data-slot': item.eq(i).data('item').slot})
-                item.eq(i).attr('data-relevance', rel * -1);
-                if(item.eq(i).attr('data-relevance') > 0)
-                {
-                    item.eq(i).addClass('fdNoRelevant');
-                }
-                if(item.eq(i).attr('data-relevance') <= 0)
-                {
-                    item.eq(i).removeClass('fdNoRelevant');
-                }
-            }
-            if(exl.length > 0 || incl.length > 0 || level > 0)
-            {
-                item.sort(function(a, b)
-                {
-                    return +a.dataset.relevance - +b.dataset.relevance;
-                }).appendTo('.uiInventory>.grid');
-            }
-            else
-            {
-                item.sort(function(a, b){
-                    if (a.dataset.slot > b.dataset.slot)
-                    {
-                        return -1;
-                    }
-                    else if (a.dataset.slot < b.dataset.slot)
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        return b.dataset.id - a.dataset.id;
-                    }
-                }).appendTo('.uiInventory>.grid');
-            }
-        }
-        setTimeout(filter, 1);
-    },
-    buildFilterBox: function()
-    {
-        // hide Pixeldoll if is open
-        $('.pixelDoll').hide();
-        // set button state
-        $('.pdFilters').addClass('pdActive');
-        if($('.pdStats').hasClass('pdActive'))
-        {
-            $('.pdStats').removeClass('pdActive');
-        }
-        if($('.pdCharacter').hasClass('pdActive'))
-        {
-            $('.pdCharacter').removeClass('pdActive');
-        }
-        // build filters if not exist
-        if( ! this.uiPixelDollFilters)
-        {
+            var eqpi = $('.pdItem[data-slot="'+item.slot+'"]');
 
-            var pdStats = ['manaMax','regenMana','hpMax','regenHp','str','int','dex','magicFind','addCritChance','armor', 'clear filters'];
-            var pdStatsLength = pdStats.length;
-
-            this.uiPixelDollFilters = $('<div class="filterDoll"></div>').appendTo('.uiInventory');
-            var pdFilters = $('.filterDoll').empty();
-            $('<div class="fdHeading">Filter</div>').appendTo(pdFilters);
-            $('<div class="fdLevelMinus fdMiniButton">-</div><input type="text" class="fdLevelInput" value="0" /><div class="fdLevelPlus fdMiniButton">+</div>').appendTo(pdFilters);
-            for(var i = 0; i < pdStatsLength; i++)
-            {
-                $('<div class="fdButton" data-state="0" data-stat="'+pdStats[i]+'">'+pdStats[i]+'</div>').appendTo(pdFilters);
-            }
+            eqpi.attr('data-quality', item.quality)
+                .html('<div class="icon" style="background: url(\'../../../images/items.png\') -'+imgX+'px -'+imgY+'px;"></div></div>')
+                .on('mouseenter', this.showEqTooltip.bind(this, item, eqpi))
+                .on('mouseleave', this.hideEqTooltip.bind());
         }
-        else
-        {
-            $('.filterDoll').show();
-        }
-        // minus button
-        $('.fdLevelMinus').unbind('click').click(function()
-        {
-            var cVal = parseInt($('.fdLevelInput').val());
-            var cn   = null;
-            if(isNaN(cVal))
-            {
-                var value = $('.fdLevelInput').val();
-                var split = value.split(' ');
-                var level = parseInt(split[1]) -     1;
-                var operator = split[0];
-                var limit = '';
-                if(split[2] !== undefined) limit = ' '+split[2];
-                cVal = operator+' '+level+limit;
-                cn = split[1];
-            }
-            else
-            {
-                cn = cVal;
-                cVal = cVal - 1;
-            }
-            if(cn > 0)
-            {
-                $('.fdLevelInput').val(cVal);
-                $('.fdLevelInput').trigger("change");
-            }
-        })
-        // plus button
-        $('.fdLevelPlus').unbind('click').click(function()
-        {
-            var cVal = parseInt($('.fdLevelInput').val());
-            var cn   = null;
-            if(isNaN(cVal))
-            {
-                var value = $('.fdLevelInput').val();
-                var split = value.split(' ');
-                var level = parseInt(split[1]) + 1;
-                var operator = split[0];
-                var limit = '';
-                if(split[2] !== undefined) limit = ' '+split[2];
-                cVal = operator+' '+level+limit;
-                cn = split[1];
-            }
-            else
-            {
-                cVal = cVal + 1;
-                cn = cVal;
-            }
-            if(cn >= 0)
-            {
-                $('.fdLevelInput').val(cVal);
-                $('.fdLevelInput').trigger("change");
-            }
-        })
-        // input filterInv trigger
-        var that = this;
-        $('.fdLevelInput').change({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event) {
-            $('.fdLevelInput').blur();
-            var level    = parseInt($(this).val());
-            var operator = null;
-            var limit    = 10;
-            if(isNaN(level))
-            {
-                var rawValue = $(this).val();
-                var value    = rawValue.split(' ');
-                level        = value[1];
-                operator     = value[0];
-                if(value[2] !== undefined) limit = value[2];
-                if(isNaN(level))
-                {
-                    level = 0;
-                    console.log('WARNING-PIXELDOLL: Second parameter must be a number.');
-                }
-            }
-            event.data.limit = limit;
-            event.data.operator = operator;
-            event.data.level = level;
-            event.data.filterInv(event.data);
-        })
-        // .statButton action, it's here because passing event to another function fired error
-        $('.filterDoll .fdButton').unbind('click').click({include: this.includeFilter, exclude: this.excludeFilter, filterInv: this.buildFilteredInventory, equipped: this.itemEquipped}, function(event)
-        {
-            var includeFilter = event.data.include;
-            var excludeFitler = event.data.exclude;
-            var level    = parseInt($('.fdLevelInput').val());
-            var operator = null;
-            var limit    = 10;
-            if(isNaN(level))
-            {
-                var rawValue = $('.fdLevelInput').val();
-                var value    = rawValue.split(' ');
-                level        = value[1];
-                operator     = value[0];
-                if(value[2] !== undefined) limit = value[2];
-                if(isNaN(level))
-                {
-                    level = 0;
-                    console.log('WARNING-PIXELDOLL: Second parameter must be a number.');
-                }
-            }
-            event.data.limit = limit;
-            event.data.operator = operator;
-            event.data.level = level;
-            var stat   = $(this).data('stat');
-            var state  = $(this).attr('data-state');
-            // clear all selected filters
-            if(stat == 'clear filters')
-            {
-                $('.fdButton').attr('data-state', '0');
-                includeFilter.length = 0;
-                excludeFitler.length = 0;
-                $('.fdLevelInput').val(0);
-                event.data.level = 0;
-            }
-            else
-            {
-                switch(state)
-                {
-                case '0':
-                    includeFilter.push(stat);
-                    $(this).attr('data-state', 1);
-                    break;
-                case '1':
-                    if($.inArray(stat, includeFilter) != -1)
-                    {
-                        includeFilter.splice( $.inArray(stat, includeFilter), 1);
-                    }
-                    excludeFitler.push(stat);
-                    $(this).attr('data-state', 2);
-                    break;
-                case '2':
-                    if($.inArray(stat, includeFilter) != -1)
-                    {
-                        includeFilter.splice( $.inArray(stat, includeFilter), 1);
-                    }
-                    if($.inArray(stat, excludeFitler) != -1)
-                    {
-                        excludeFitler.splice( $.inArray(stat, excludeFitler), 1);
-                    }
-                    $(this).attr('data-state', 0);
-                    break;
-                }
-            }
-            event.data.filterInv(event.data);
-        });
-    },
-    hideEqTooltip: function()
-    {
-        $('.tooltip').hide();
     },
     showEqTooltip: function(item, element, e)
     {
         var elOffset = $(element).offset();
-        var uiOffset = $('.uiInventory').offset();
+        var uiOffset = this.uiInventory.offset();
         var tooltip  = $('.tooltip');
         tooltip.show();
         tooltip.css({
@@ -595,4 +178,443 @@ addons.register({
         "<div class='level'>level: "+item.level+"</div>"
         );
     },
+    hideEqTooltip: function()
+    {
+        $('.tooltip').hide();
+    },
+    addQualityBorders: function()
+    {
+        var items = this.items;
+        if(this.uiInventory != undefined)
+        {
+            if(this.uiInventory.children('.grid .item').length <= 0)
+            {
+                setTimeout(function() {
+                    for(var i = 0; i < items.length; i++)
+                    {
+                        var item  = $('.uiInventory .grid .item').eq(i);
+                        if(item.attr('data-quality') == undefined)
+                        {
+                            item.attr('data-quality', items[i].quality);
+                            var imgX = -(items[i].sprite[0] * 64) - 4;
+                            var imgY = -(items[i].sprite[1] * 64) - 4;
+                            item.children('.icon').css('background-position', imgX + 'px ' + imgY + 'px');
+                        }
+                    }
+                }, 1);
+            }
+        }
+        else
+        {
+            return;
+        }
+    },
+    addCompareTooltips: function()
+    {
+        var invItems = $('.uiInventory .grid .item');
+        for(var i = 0; i < invItems.length; i++)
+        {
+            invItems.eq(i).on('mouseenter', this.buildCompareTooltip.bind(this, invItems.eq(i), invItems.eq(i).data('item'))).on('mouseleave', this.hideCompareTooltip.bind(this));
+        }
+    },
+    buildCompareTooltip: function(el, item, e)
+    {
+        var tooltip = $('.uiInventory .tooltip');
+        tooltip.attr('data-quality', item.quality);
+
+        if(item.material == undefined)
+        {
+            var equipedItems = this.equipedItems;
+            var elOffset     = el.offset();
+            var uiOffset     = this.uiInventory.offset();
+
+            tooltip = $('.pixelDollCompare');
+            tooltip.css({
+                left: ~~(elOffset.left - uiOffset.left + 292),
+                top:  ~~(elOffset.top - uiOffset.top + 4)
+            })
+
+            for(var i = 0; i < equipedItems.length; i++)
+            {
+                var eqItem = equipedItems[i];
+                if(eqItem.slot == item.slot)
+                {
+                    stats = Object.keys(eqItem.stats).map(function(s) {
+                            return s + ': ' + eqItem.stats[s];
+                        }).join('<br />');
+                    tooltip.attr('data-quality', eqItem.quality);
+                    tooltip.html(
+                    "<div class='info'>currently equipped</div>"+
+                    "<div class='name q"+eqItem.quality+"'>"+eqItem.name+"</div>"+
+                    "<div class='stats'>"+stats+"</div>"+
+                    "<div class='level'>level: "+eqItem.level+"</div>"
+                    );
+                    tooltip.show();
+                }
+
+            }
+
+        }
+    },
+    hideCompareTooltip: function()
+    {
+        $('.pixelDollCompare').hide();
+    },
+    onChangeStats: function(stats)
+    {
+        if(this.uiPixelDoll != undefined && this.uiPixelDoll.children('.pdLevel').html())
+        {
+            var currentLevel = parseInt($('.pdLevel').html().slice(6));
+            if(currentLevel != stats.level)
+            {
+                $('.pixelDoll .pdLevel').html('level ' + stats.level);
+            }
+        }
+    },
+    buildFilterDoll: function()
+    {
+        if(this.uiFilterDoll.length <= 0)
+        {
+            this.uiFilterDoll = $('<div class="filterDoll"></div>').appendTo(this.uiInventory);
+        }
+
+        if( ! this.uiFilterDoll.html())
+        {
+            $('<div class="fdHeading">Filters</div>').appendTo(this.uiFilterDoll);
+
+            // Input box
+            $('<div class="fdLevelMinus fdMiniButton">-</div><input type="text" class="fdLevelInput" value="0" /><div class="fdLevelPlus fdMiniButton">+</div>').appendTo(this.uiFilterDoll);
+
+            // Filter buttons
+            var fdStats = ['manaMax','regenMana','hpMax','regenHp','str','int','dex','magicFind','addCritChance','armor', 'clear filters'];
+            for(var i = 0; i < fdStats.length; i++)
+            {
+                $('<div class="fdButton" data-state="0" data-stat="'+fdStats[i]+'">'+fdStats[i]+'</div>').appendTo(this.uiFilterDoll);
+            }
+        }
+
+        $('.fdMiniButton').unbind('click').click(this.changeLevelValue.bind(this));
+        $('.fdButton').unbind('click').click(this.fillFilters.bind(this));
+        $('.fdLevelInput').change(this.fillFilters.bind(this));
+
+    },
+    changeLevelValue: function(el)
+    {
+        var levelValue = $('.fdLevelInput').val();
+        var trigger    = $(el.target);
+        var value      = levelValue.split(' ');
+        var level      = 0;
+        var number     = 0;
+
+        if(trigger.attr('class') == 'fdLevelMinus fdMiniButton')
+        {
+            if(value.length == 1)
+            {
+                value  = value[0].replace(/[^0-9]/g, '');
+                number = parseInt(value);
+                level  = number - 1;
+            }
+            else if(value.length >= 2 && value.length <= 3)
+            {
+                number = parseInt(value[1]);
+                value[1] = number - 1;
+                limit = '';
+                if(value[2] !== undefined) limit = ' '+value[2];
+                level = value[0] + ' ' + value[1] + limit;
+            }
+        }
+        else if(trigger.attr('class') == 'fdLevelPlus fdMiniButton')
+        {
+            if(value.length == 1)
+            {
+                value  = value[0].replace(/[^0-9]/g, '');
+                number = parseInt(value) + 1;
+                level  = number;
+            }
+            else if(value.length >= 2 && value.length <= 3)
+            {
+                number = parseInt(value[1]) + 1;
+                value[1] = number;
+                limit = '';
+                if(value[2] !== undefined) limit = ' '+value[2];
+                level = value[0] + ' ' + value[1] + limit;
+            }
+        }
+
+        if(number > 0)
+        {
+            $('.fdLevelInput').val(level);
+            $('.fdLevelInput').trigger("change");
+        }
+    },
+    fillFilters: function(el)
+    {
+        var includeFilter = this.includeFilter;
+        var excludeFilter = this.excludeFilter;
+        var levelFilter   = this.levelFilter;
+        var level         = $('.fdLevelInput').val();
+        var trigger       = $(el.target);
+
+        if(trigger.attr('class') == 'fdButton' && trigger.attr('data-stat') != 'clear filters')
+        {
+            var data  = trigger.attr('data-stat');
+            var state = trigger.attr('data-state');
+
+            switch(state)
+            {
+                case '0':
+                    includeFilter.push(data);
+                    trigger.attr('data-state', 1);
+                break;
+                case '1':
+                    if($.inArray(data, includeFilter) != -1)
+                    {
+                        includeFilter.splice( $.inArray(data, includeFilter), 1);
+                    }
+                    excludeFilter.push(data);
+                    trigger.attr('data-state', 2);
+                break;
+                case '2':
+                    if($.inArray(data, includeFilter) != -1)
+                    {
+                        includeFilter.splice( $.inArray(data, includeFilter), 1);
+                    }
+                    if($.inArray(data, excludeFilter) != -1)
+                    {
+                        excludeFilter.splice( $.inArray(data, excludeFilter), 1);
+                    }
+                    trigger.attr('data-state', 0);
+                break;
+            }
+        }
+        else if(trigger.attr('class') == 'fdLevelInput')
+        {
+            trigger.blur();
+            var value = level.split(' ');
+            if(value.length == 1)
+            {
+                var value = value[0].replace(/[^0-9]/g, '');
+                levelFilter['level'] = parseInt(value);
+            }
+            else
+            {
+                if(value.length >= 2 && value.length <= 3)
+                {
+                    levelFilter['level']    = parseInt(value[1]);
+                    levelFilter['operator'] = value[0];
+                    if(value[2] !== undefined ) levelFilter['limit'] = value[2];
+                }
+            }
+        }
+        else if(trigger.attr('data-stat') == 'clear filters')
+        {
+            $('.fdButton').attr('data-state', '0');
+            includeFilter.length = 0;
+            excludeFilter.length = 0;
+            $('.fdLevelInput').val(0);
+            levelFilter['level'] = 0;
+            levelFilter['operator'] = null;
+            levelFilter['limit'] = 10;
+        }
+
+        this.filterInventory();
+    },
+    filterInventory: function()
+    {
+        var includeFilter = this.includeFilter;
+        var excludeFilter = this.excludeFilter;
+        var levelFilter   = this.levelFilter;
+        var items         = this.items;
+        var filterable    = [];
+        var invItems      = $('.uiInventory .grid .item');
+
+        for(var i = 0; i < invItems.length; i++)
+        {
+            var item = invItems.eq(i);
+
+            if(item.data('item').slot !== undefined)
+            {
+                var relevance  = 0;
+                var itemStats  = item.data('item').stats;
+                var itemLevel  = item.data('item').level;
+                var itemStatsL = Object.keys(itemStats).length;
+
+                for(var k = 0; k < itemStatsL; k++)
+                {
+                    var itemStatsKey = Object.keys(itemStats)[k];
+
+                    // Inclusion
+                    if($.inArray(itemStatsKey, includeFilter) >= 0)
+                    {
+                        relevance = relevance + itemStats[itemStatsKey];
+
+                        if(levelFilter['operator'] == '+')
+                        {
+                            if(itemLevel >= levelFilter['level'])
+                            {relevance = (relevance * 10) + itemStats[itemStatsKey]}
+                            else{relevance = -1}
+                        }
+                        else if(levelFilter['operator'] == '-')
+                        {
+                            if(itemLevel <= levelFilter['level'])
+                            {relevance = (relevance * 10) + itemStats[itemStatsKey]}
+                            else{relevance = -1}
+                        }
+                        else if(levelFilter['operator'] == '!')
+                        {
+                            if(itemLevel == levelFilter['level'])
+                            {relevance = -1}
+                        }
+                        else if(levelFilter['operator'] == '-+')
+                        {
+                            relevance = -1;
+                            var upLimit   = parseInt(levelFilter['level']) + parseInt(levelFilter['limit']);
+                            var downLimit = parseInt(levelFilter['level']) - parseInt(levelFilter['limit']);
+                            if(itemLevel > downLimit && itemLevel < upLimit)
+                            {relevance = (relevance + itemStats[itemStatsKey]) + itemLevel}
+                        }
+                    }
+                    else if(levelFilter['level'] > 0 && levelFilter['operator'] == '+' && $.inArray(itemStatsKey, includeFilter) <= 0 || levelFilter['level'] > 0 && levelFilter['operator'] == '-' && $.inArray(itemStatsKey, includeFilter) <= 0 || levelFilter['level'] > 0 && levelFilter['operator'] == '-+' && $.inArray(itemStatsKey, includeFilter) <= 0)
+                    {
+                        if(relevance <= 0) relevance = -1;
+                    }
+
+                    // Exclusion
+                    if($.inArray(itemStatsKey, excludeFilter) >= 0)
+                    {
+                        relevance--;
+                    }
+
+                    // Levelusion
+                    if(excludeFilter.length == 0 && includeFilter.length == 0 && levelFilter['level'] > 0)
+                    {
+                        if(levelFilter['operator'] == '+')
+                        {
+                            if(itemLevel >= levelFilter['level'])
+                            {relevance = itemLevel * 10}
+                            else{relevance = -1}
+                        }
+                        else if(levelFilter['operator'] == '-')
+                        {
+                            if(itemLevel <= levelFilter['level'])
+                            {relevance = itemLevel * 10}
+                            else{relevance = -1}
+                        }
+                        else if(levelFilter['operator'] == '!')
+                        {
+                            if(itemLevel == levelFilter['level'])
+                            {relevance = -1}
+                        }
+                        else if(levelFilter['operator'] == '-+')
+                        {
+                            relevance = -1;
+                            var upLimit   = parseInt(levelFilter['level']) + parseInt(levelFilter['limit']);
+                            var downLimit = parseInt(levelFilter['level']) - parseInt(levelFilter['limit']);
+                            if(itemLevel > downLimit && itemLevel < upLimit)
+                            {relevance = itemLevel * 10}
+                        }
+                        else if(itemLevel == levelFilter['level'] && levelFilter['operator'] == null)
+                        {
+                            relevance = itemLevel * 10;
+                        }
+                    }
+                }
+
+                // relevance negation
+                relevance = relevance * -1;
+
+                // setting attributes, because data are not accessible
+                item.attr('data-relevance', relevance);
+                item.attr('data-type', 'equip');
+                item.attr('data-id', item.data('item').id);
+                item.attr('data-slot', item.data('item').slot);
+            }
+            else if(excludeFilter.length > 0 || includeFilter.length > 0 || levelFilter['level'] > 0)
+            {
+                item.attr('data-type', 'material');
+                item.attr('data-relevance', 999999);
+                item.attr('data-id', item.data('item').id);
+            }
+            else
+            {
+                item.attr('data-relevance', 0);
+            }
+
+            if(item.attr('data-relevance') > 0)
+            {
+                item.addClass('fdNoRelevant');
+            }
+            else
+            {
+                item.removeClass('fdNoRelevant');
+            }
+        }
+        this.sortInventory();
+    },
+    sortInventory: function()
+    {
+
+        var includeFilter = this.includeFilter;
+        var excludeFilter = this.excludeFilter;
+        var levelFilter   = this.levelFilter;
+        var items         = $('.uiInventory .grid .item');
+
+        if(excludeFilter.length > 0 || includeFilter.length > 0 || levelFilter['level'] > 0)
+        {
+            items.sort(function(a, b) {
+                if(+a.dataset.relevance > +b.dataset.relevance)
+                {
+                    return 1;
+                }
+                else if(+a.dataset.relevance < +b.dataset.relevance)
+                {
+                    return -1;
+                }
+                else if(+a.dataset.relevance == +b.dataset.relevance)
+                {
+                    return a.dataset.id - b.dataset.id;
+                }
+            }).appendTo('.uiInventory>.grid');
+        }
+        else if(excludeFilter.length == 0 && includeFilter.length == 0 && levelFilter['level'] == 0)
+        {
+            if($('.uiInventory .grid .item').attr('data-id') != undefined)
+            {
+                items.sort(function(a, b) {
+                    if((a.dataset.type == 'material') && (b.dataset.type !== 'material'))
+                    {
+                        return -1;
+                    }
+                    else if((b.dataset.type == 'material') && (a.dataset.type !== 'material'))
+                    {
+                        return 1;
+                    }
+
+                    if(a.dataset.slot > b.dataset.slot)
+                    {
+                        return -1;
+                    }
+                    else if(a.dataset.slot < b.dataset.slot)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return b.dataset.id - a.dataset.id;
+                    }
+                }).appendTo('.uiInventory>.grid');
+            }
+        }
+    },
+    destroyItems: function()
+    {
+        this.toggleInventory();
+    },
+    onKeyDown: function(key)
+    {
+        if(key == 'i')
+        {
+            this.toggleInventory();
+        }
+    }
 });
