@@ -393,6 +393,7 @@ addons.register({
             var value = level.split(' ');
             if(value.length == 1)
             {
+                levelFilter['operator'] = null;
                 var value = value[0].replace(/[^0-9]/g, '');
                 levelFilter['level'] = parseInt(value);
             }
@@ -472,6 +473,10 @@ addons.register({
                             var downLimit = parseInt(levelFilter['level']) - parseInt(levelFilter['limit']);
                             if(itemLevel > downLimit && itemLevel < upLimit)
                             {relevance = (relevance + itemStats[itemStatsKey]) + itemLevel}
+                        }
+                        else if(itemLevel == levelFilter['level'] && levelFilter['operator'] == null)
+                        {
+                            relevance = (relevance * 10) + itemLevel;
                         }
                     }
                     else if(levelFilter['level'] > 0 && levelFilter['operator'] == '+' && $.inArray(itemStatsKey, includeFilter) <= 0 || levelFilter['level'] > 0 && levelFilter['operator'] == '-' && $.inArray(itemStatsKey, includeFilter) <= 0 || levelFilter['level'] > 0 && levelFilter['operator'] == '-+' && $.inArray(itemStatsKey, includeFilter) <= 0)
