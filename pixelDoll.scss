@@ -216,19 +216,38 @@ $red400: rgb(128, 35, 67);
     .pdCharacterFrame
     {
         position: absolute;
-        width: 112px;
-        height: 112px;
-        left: 50%;
-        top: 50%;
-        margin: -69px -56px;
+        width: 285px;
+        height: 360px;
+        left: 5px;
+        top: 18%;
         overflow: hidden;
+        background: url('http://islevault.silencesys.com/images/background_character.png') no-repeat;
 
         .pdCharacterPreview
         {
             width: 32px;
             height: 32px;
-            image-rendering: pixelated;;
-            zoom: 3.5;
+            image-rendering: pixelated;
+            position: absolute;;
+            left: 125px;
+            top: 163px;
+        }
+
+        &.cleric
+        {
+            background-position: -100px -125px;
+        }
+        &.warrior
+        {
+            background-position: -483px -125px;
+        }
+        &.wizard
+        {
+            background-position: -933px -125px;
+        }
+        &.thief
+        {
+            background-position: -1318px -125px;
         }
     }
 }

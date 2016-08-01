@@ -123,7 +123,7 @@ addons.register({
             $('<div class="pdClass pdText">class '+window.player.class+'</div>').appendTo(this.uiPixelDoll);
 
             // add player's character
-            var characterFrame = $('<div class="pdCharacterFrame"></div>').appendTo(this.uiPixelDoll);
+            var characterFrame = $('<div class="pdCharacterFrame '+window.player.class+'"></div>').appendTo(this.uiPixelDoll);
             spriteY = ~~(window.player.cell / 8);
             spriteX = window.player.cell - (spriteY * 8);
             spriteY = -(spriteY * 32);
@@ -264,10 +264,13 @@ addons.register({
     {
         if(this.uiPixelDoll != undefined && this.uiPixelDoll.children('.pdLevel').html())
         {
-            var currentLevel = parseInt($('.pdLevel').html().slice(6));
-            if(currentLevel != stats.level)
+            if($('.pdLevel').html() != undefined)
             {
-                $('.pixelDoll .pdLevel').html('level ' + stats.level);
+                var currentLevel = parseInt($('.pdLevel').html().slice(6));
+                if(currentLevel != stats.level)
+                {
+                    $('.pixelDoll .pdLevel').html('level ' + stats.level);
+                }
             }
         }
     },

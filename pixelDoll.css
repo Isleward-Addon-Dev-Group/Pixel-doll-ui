@@ -70,14 +70,14 @@
     .pixelDoll-Button.pdActive:hover {
       background-color: #3c3f4c; }
   .pixelDoll-Button.pdCharacter {
-    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=2.0.4);
+    background-image: url(https://raw.githubusercontent.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/master/pixelDoll-icons.png?v=2.0.4);
     background-position: 0px -128px; }
   .pixelDoll-Button.pdStats {
-    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=2.0.4);
+    background-image: url(https://raw.githubusercontent.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/master/pixelDoll-icons.png?v=2.0.4);
     background-position: 0px -64px;
     top: 74px; }
   .pixelDoll-Button.pdFilters {
-    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=2.0.4);
+    background-image: url(https://raw.githubusercontent.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/master/pixelDoll-icons.png?v=2.0.4);
     background-position: -1px 0px;
     top: 148px; }
 
@@ -163,17 +163,27 @@
     margin-bottom: 3px; }
   .uiInventory > .pixelDoll .pdCharacterFrame {
     position: absolute;
-    width: 112px;
-    height: 112px;
-    left: 50%;
-    top: 50%;
-    margin: -69px -56px;
-    overflow: hidden; }
+    width: 285px;
+    height: 360px;
+    left: 5px;
+    top: 18%;
+    overflow: hidden;
+    background: url("http://islevault.silencesys.com/images/background_character.png") no-repeat; }
     .uiInventory > .pixelDoll .pdCharacterFrame .pdCharacterPreview {
       width: 32px;
       height: 32px;
       image-rendering: pixelated;
-      zoom: 3.5; }
+      position: absolute;
+      left: 125px;
+      top: 163px; }
+    .uiInventory > .pixelDoll .pdCharacterFrame.cleric {
+      background-position: -100px -125px; }
+    .uiInventory > .pixelDoll .pdCharacterFrame.warrior {
+      background-position: -483px -125px; }
+    .uiInventory > .pixelDoll .pdCharacterFrame.wizard {
+      background-position: -933px -125px; }
+    .uiInventory > .pixelDoll .pdCharacterFrame.thief {
+      background-position: -1318px -125px; }
 
 /**
  * FilterDoll
