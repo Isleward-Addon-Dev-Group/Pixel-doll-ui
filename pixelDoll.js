@@ -160,11 +160,11 @@ addons.register({
     {
         var elOffset = $(element).offset();
         var uiOffset = this.uiInventory.offset();
-        var tooltip  = $('.tooltip');
+        var tooltip  = $('.uiTooltipItem .tooltip');
         tooltip.show();
         tooltip.css({
-            left: ~~(elOffset.left - uiOffset.left + 74),
-            top:  ~~(elOffset.top - uiOffset.top + 4)
+            left: ~~(elOffset.left + 74),
+            top:  ~~(elOffset.top + 4)
         })
         tooltip.attr('data-quality', item.quality);
 
@@ -180,7 +180,7 @@ addons.register({
     },
     hideEqTooltip: function()
     {
-        $('.tooltip').hide();
+        $('.uiTooltipItem .tooltip').hide();
     },
     addQualityBorders: function()
     {
@@ -219,7 +219,7 @@ addons.register({
     },
     buildCompareTooltip: function(el, item, e)
     {
-        var tooltip = $('.uiInventory .tooltip');
+        var tooltip = $('.uiTooltipItem .tooltip');
         tooltip.attr('data-quality', item.quality);
 
         if(item.material == undefined)

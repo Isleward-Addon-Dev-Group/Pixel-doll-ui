@@ -23,11 +23,31 @@
         opacity: 0.35; }
       .uiInventory > .grid .item:nth-child(8n) {
         margin: 0 8px 8px 0 !important; }
+  .uiInventory .tooltip {
+    z-index: 900; }
+    .uiInventory .tooltip[data-quality="1"] {
+      border-color: rgba(63, 167, 221, 0.35) !important; }
+    .uiInventory .tooltip[data-quality="2"] {
+      border-color: rgba(255, 235, 56, 0.35) !important; }
+    .uiInventory .tooltip[data-quality="3"] {
+      border-color: rgba(162, 78, 255, 0.35) !important; }
+    .uiInventory .tooltip[data-quality="4"] {
+      border-color: rgba(255, 105, 66, 0.35) !important; }
   .uiInventory > .stats {
     width: 316px !important;
     height: 557px !important; }
-  .uiInventory .tooltip {
-    z-index: 900; }
+
+.uiTooltipItem .tooltip[data-quality="1"] {
+  border-color: rgba(63, 167, 221, 0.35) !important; }
+
+.uiTooltipItem .tooltip[data-quality="2"] {
+  border-color: rgba(255, 235, 56, 0.35) !important; }
+
+.uiTooltipItem .tooltip[data-quality="3"] {
+  border-color: rgba(162, 78, 255, 0.35) !important; }
+
+.uiTooltipItem .tooltip[data-quality="4"] {
+  border-color: rgba(255, 105, 66, 0.35) !important; }
 
 /**
  * PixelDoll Buttons
@@ -50,14 +70,14 @@
     .pixelDoll-Button.pdActive:hover {
       background-color: #3c3f4c; }
   .pixelDoll-Button.pdCharacter {
-    background-image: url(https://isleward-test.herokuapp.com/images/items.png);
-    background-position: 0px -64px; }
+    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=2.0.4);
+    background-position: 0px -128px; }
   .pixelDoll-Button.pdStats {
-    background-image: url(https://isleward-test.herokuapp.com/images/items.png);
-    background-position: -512px 0px;
+    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=2.0.4);
+    background-position: 0px -64px;
     top: 74px; }
   .pixelDoll-Button.pdFilters {
-    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=1.3);
+    background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=2.0.4);
     background-position: -1px 0px;
     top: 148px; }
 
@@ -277,18 +297,3 @@
 
 .q4 {
   color: #ff6942; }
-
-/**
- * Item quality tooltips
- */
-.tooltip[data-quality="1"] {
-  border-color: rgba(63, 167, 221, 0.35) !important; }
-
-.tooltip[data-quality="2"] {
-  border-color: rgba(255, 235, 56, 0.35) !important; }
-
-.tooltip[data-quality="3"] {
-  border-color: rgba(162, 78, 255, 0.35) !important; }
-
-.tooltip[data-quality="4"] {
-  border-color: rgba(255, 105, 66, 0.35) !important; }

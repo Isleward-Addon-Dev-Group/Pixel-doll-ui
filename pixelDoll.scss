@@ -82,13 +82,29 @@ $red400: rgb(128, 35, 67);
         }
     }
 
+    // Item quality tooltips
+
+    .tooltip
+    {
+        z-index: 900;
+        &[data-quality="1"]{border-color: $q1border !important;}
+        &[data-quality="2"]{border-color: $q2border !important;}
+        &[data-quality="3"]{border-color: $q3border !important;}
+        &[data-quality="4"]{border-color: $q4border !important;}
+    }
+
     >.stats
     {
         width : 316px !important;
         height: 557px !important;
     }
-
-    .tooltip {z-index: 900;}
+}
+.uiTooltipItem .tooltip
+{
+    &[data-quality="1"]{border-color: $q1border !important;}
+    &[data-quality="2"]{border-color: $q2border !important;}
+    &[data-quality="3"]{border-color: $q3border !important;}
+    &[data-quality="4"]{border-color: $q4border !important;}
 }
 /**
  * PixelDoll Buttons
@@ -116,18 +132,18 @@ $red400: rgb(128, 35, 67);
 
     &.pdCharacter
     {
-        background-image: url(https://isleward-test.herokuapp.com/images/items.png);
-        background-position: 0px -64px;
+        background-image: url(https://raw.githubusercontent.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/master/pixelDoll-icons.png?v=2.0.4);
+        background-position: 0px -128px;
     }
     &.pdStats
     {
-        background-image: url(https://isleward-test.herokuapp.com/images/items.png);
-        background-position: -512px 0px;
+        background-image: url(https://raw.githubusercontent.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/master/pixelDoll-icons.png?v=2.0.4);
+        background-position: 0px -64px;
         top: 74px;
     }
     &.pdFilters
     {
-        background-image: url(http://dev.silencesys.com/isleward/pixelDoll-icons.png?v=1.3);
+        background-image: url(https://raw.githubusercontent.com/Isleward-Addon-Dev-Group/Pixel-doll-ui/master/pixelDoll-icons.png?v=2.0.4);
         background-position: -1px 0px;
         top: 148px;
     }
@@ -326,15 +342,3 @@ $red400: rgb(128, 35, 67);
 .q2 {color: $q2;}
 .q3 {color: $q3;}
 .q4 {color: $q4;}
-
-/**
- * Item quality tooltips
- */
-
-.tooltip
-{
-    &[data-quality="1"]{border-color: $q1border !important;}
-    &[data-quality="2"]{border-color: $q2border !important;}
-    &[data-quality="3"]{border-color: $q3border !important;}
-    &[data-quality="4"]{border-color: $q4border !important;}
-}
